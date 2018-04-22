@@ -1,12 +1,13 @@
 import React, { Component } from 'react';
-import ReactDOM from 'react-dom';
 
-import DraggableCard from './components/molecules/draggable-card';
+import TaskListPage from './components/pages/task-list-page';
+
 
 export default class App extends Component {
   render() {
+    console.log(this);
     return (
-      <DraggableCard />
+      <TaskListPage />
     )
   }
 }

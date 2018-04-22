@@ -1,8 +1,7 @@
 import React, { Component } from 'react';
-import styled from 'styled-components';
 import { connect } from 'react-redux';
 import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
-import { sortListItems } from '../../redux/modules/tasks'
+import { sortListItems, setEditTask, clearEditTask } from '../../redux/modules/tasks'
 
 class DraggableCard extends Component {
   constructor(props) {
@@ -34,16 +33,12 @@ class DraggableCard extends Component {
 
   /**
    * タスクカードの順番を制御
-   * @param {Array} list 
-   * @param {Integer} startIndex 
-   * @param {Integer} endIndex 
    */
   reorder(list, startIndex, endIndex) {
     const result = Array.from(list);
     const [removed] = result.splice(startIndex, 1);
     result.splice(endIndex, 0, removed);
 
-    console.log(result);
     this.props.sortListItems(result);
   }
 
@@ -62,20 +57,18 @@ class DraggableCard extends Component {
       result.source.index,
       result.destination.index
     );
+  }
 
-    // const items = this.reorder(
-    //   items,
-    //   result.source.index,
-    //   result.destination.index
-    // );
+  /**
+   * 編集モードのon/off
+   */
+  onToggleModeEdit() {
 
-    // this.setState({
-    //   items,
-    // });
   }
 
   render() {
     const { items } = this.props.tasks;
+    console.log(this)
 
     return (
       <DragDropContext onDragEnd={this.onDragEnd}>
@@ -91,6 +84,7 @@ class DraggableCard extends Component {
                         style={this.getItemStyle(snapshot.isDragging, provided.draggableProps.style)}
                       >
                         {item.content}
+                        <button id={item.id} onClick={ () => this.props.setEditTask() }>編集する</button>
                       </div>
                     )}
                   </Draggable>
@@ -113,12 +107,10 @@ function mapStateToProps (state) {
 
 function mapDispatchToProps (dispatch) {
   return {
-    sortListItems: (array) => dispatch(sortListItems(array))
+    sortListItems: array => dispatch(sortListItems(array)),
+    setEditTask: () => dispatch(setEditTask()),
+    clearEditTask: () => dispatch(clearEditTask())
   };
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(DraggableCard);
-
-const Wrapper = styled.div`
-  padding: 40px;
-`;
