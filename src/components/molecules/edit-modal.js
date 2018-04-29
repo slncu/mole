@@ -1,8 +1,5 @@
 import React, { Component } from 'react';
-import { connect } from 'react-redux';
 import Modal from 'react-modal';
-
-import { clearEditTask } from '../../redux/modules/tasks'
 
 const customStyles = {
   content : {
@@ -17,7 +14,7 @@ const customStyles = {
 
 Modal.setAppElement('#root')
 
-class EditModal extends Component {
+export default class EditModal extends Component {
   constructor() {
     super();
 
@@ -30,7 +27,6 @@ class EditModal extends Component {
 
   render() {
     const { isEditable } = this.props.tasks;
-    console.log(isEditable)
     return (
       <div>
         <Modal
@@ -38,7 +34,6 @@ class EditModal extends Component {
           style={customStyles}
           contentLabel="Example Modal"
         >
-          {console.log(this)}
           <h2 ref={subtitle => this.subtitle = subtitle}>Hello</h2>
           <button onClick={this.onClose}>close</button>
           <div>I am a modal</div>
@@ -54,17 +49,3 @@ class EditModal extends Component {
     );
   }
 }
-
-function mapStateToProps (state) {
-  return {
-    tasks: state.tasks
-  }
-}
-
-function mapDispatchToProps (dispatch) {
-  return {
-    clearEditTask: () => dispatch(clearEditTask())
-  };
-}
-
-export default connect(mapStateToProps, mapDispatchToProps)(EditModal);

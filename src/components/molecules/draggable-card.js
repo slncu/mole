@@ -1,9 +1,7 @@
 import React, { Component } from 'react';
-import { connect } from 'react-redux';
 import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
-import { sortListItems, setEditTask, clearEditTask } from '../../redux/modules/tasks'
 
-class DraggableCard extends Component {
+export default class DraggableCard extends Component {
   constructor(props) {
     super(props);
 
@@ -68,7 +66,7 @@ class DraggableCard extends Component {
 
   render() {
     const { items } = this.props.tasks;
-    console.log(this)
+    console.log(this);
 
     return (
       <DragDropContext onDragEnd={this.onDragEnd}>
@@ -98,19 +96,3 @@ class DraggableCard extends Component {
     );
   }
 }
-
-function mapStateToProps (state) {
-  return {
-    tasks: state.tasks
-  }
-}
-
-function mapDispatchToProps (dispatch) {
-  return {
-    sortListItems: array => dispatch(sortListItems(array)),
-    setEditTask: () => dispatch(setEditTask()),
-    clearEditTask: () => dispatch(clearEditTask())
-  };
-}
-
-export default connect(mapStateToProps, mapDispatchToProps)(DraggableCard);
