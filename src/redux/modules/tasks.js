@@ -6,16 +6,18 @@ const initialState = {
   },{
     id: 2,
     title: 'これはテストのタスクカード',
-    content: 'これはテストのタスクカード',
+    content: 'これはテストのタスクカード'
   },{
     id: 3,
     title: 'これはテストのタスクカード',
     content: '・？？？？？？？'
   }],
+  editItem: {},
   isEditable: false
 }
 
 const SORT_LIST_ITEMS = 'SORT_LIST_ITEMS';
+const SET_EDIT_ITEM = 'SET_EDIT_ITEM';
 const SET_MODE_EDIT = 'SET_MODE_EDIT';
 const CLEAR_MODE_EDIT = 'CLEAR_MODE_EDIT';
 
@@ -26,6 +28,8 @@ export default (state = initialState, action) => {
   switch (action.type) {
     case SORT_LIST_ITEMS:
       return { ...state, items: action.payload };
+    case SET_EDIT_ITEM:
+      return { ...state, editItem: action.payload };
     case SET_MODE_EDIT:
       return { ...state, isEditable: true }
     case CLEAR_MODE_EDIT:
@@ -45,6 +49,13 @@ export default (state = initialState, action) => {
 export const sortListItems = array => {
   return {
     type: SORT_LIST_ITEMS,
+    payload: array
+  };
+};
+
+export const setEditItem = array => {
+  return {
+    type: SET_EDIT_ITEM,
     payload: array
   };
 };

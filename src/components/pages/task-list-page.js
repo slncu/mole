@@ -4,7 +4,12 @@ import { connect } from 'react-redux';
 import EditModal from '../molecules/edit-modal';
 import DraggableCard from '../molecules/draggable-card';
 
-import { sortListItems, setEditTask, clearEditTask } from '../../redux/modules/tasks';
+import { 
+  sortListItems,
+  setEditTask, 
+  clearEditTask,
+  setEditItem
+} from '../../redux/modules/tasks';
 
 
 class TaskListPage extends Component {
@@ -28,6 +33,7 @@ function mapStateToProps (state) {
 function mapDispatchToProps (dispatch) {
   return {
     sortListItems: array => dispatch(sortListItems(array)),
+    setEditItem: obj => dispatch(setEditItem(obj)),
     setEditTask: () => dispatch(setEditTask()),
     clearEditTask: () => dispatch(clearEditTask())
   };

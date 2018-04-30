@@ -19,10 +19,27 @@ export default class EditModal extends Component {
     super();
 
     this.onClose = this.onClose.bind(this);
+    this.onConfirm = this.onConfirm.bind(this);
+    this.getEditItem = this.getEditItem.bind(this);
   }
 
   onClose() {
     this.props.clearEditTask();
+  }
+
+  onConfirm() {
+
+  }
+
+  getEditItem() {
+    const { title, content } = this.props.tasks.editItem[0];
+    console.log(this.props.tasks.editItem[0]);
+    return(
+      <div>
+        <div>{title}</div>
+        <div>{content}</div>
+      </div>
+    )
   }
 
   render() {
@@ -36,14 +53,7 @@ export default class EditModal extends Component {
         >
           <h2 ref={subtitle => this.subtitle = subtitle}>Hello</h2>
           <button onClick={this.onClose}>close</button>
-          <div>I am a modal</div>
-          <form>
-            <input />
-            <button>tab navigation</button>
-            <button>stays</button>
-            <button>inside</button>
-            <button>the modal</button>
-          </form>
+          { this.props.tasks.editItem[0] && this.getEditItem() }
         </Modal>
       </div>
     );

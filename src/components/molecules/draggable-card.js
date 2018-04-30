@@ -1,6 +1,8 @@
 import React, { Component } from 'react';
 import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
 
+import EditModal from './edit-modal';
+
 export default class DraggableCard extends Component {
   constructor(props) {
     super(props);
@@ -9,6 +11,7 @@ export default class DraggableCard extends Component {
     this.getItemStyle = this.getItemStyle.bind(this);
     this.reorder = this.reorder.bind(this);
     this.onDragEnd = this.onDragEnd.bind(this);
+    this.onClickEdit = this.onClickEdit.bind(this);
   }
 
   getItemStyle(isDragging, draggableStyle) {
@@ -60,13 +63,17 @@ export default class DraggableCard extends Component {
   /**
    * 編集モードのon/off
    */
-  onToggleModeEdit() {
+  onClickEdit(e) {
+    e.preventDefault();
+    const { items } = this.props.tasks;
+    const editItem = items.filter(item => ( item.id == e.currentTarget.id ));
 
+    this.props.setEditItem(editItem);
+    this.props.setEditTask();
   }
 
   render() {
     const { items } = this.props.tasks;
-    console.log(this);
 
     return (
       <DragDropContext onDragEnd={this.onDragEnd}>
@@ -82,7 +89,7 @@ export default class DraggableCard extends Component {
                         style={this.getItemStyle(snapshot.isDragging, provided.draggableProps.style)}
                       >
                         {item.content}
-                        <button id={item.id} onClick={ () => this.props.setEditTask() }>編集する</button>
+                        <button id={item.id} onClick={ e => this.onClickEdit(e) }>編集する</button>
                       </div>
                     )}
                   </Draggable>
