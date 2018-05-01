@@ -6,7 +6,8 @@ import DraggableCard from '../molecules/draggable-card';
 
 import { 
   sortListItems,
-  setEditTask, 
+  setEditTask,
+  setEditedItem,
   clearEditTask,
   setEditItem
 } from '../../redux/modules/tasks';
@@ -34,6 +35,7 @@ function mapDispatchToProps (dispatch) {
   return {
     sortListItems: array => dispatch(sortListItems(array)),
     setEditItem: obj => dispatch(setEditItem(obj)),
+    setEditedItem: obj => dispatch(setEditedItem(obj)),
     setEditTask: () => dispatch(setEditTask()),
     clearEditTask: () => dispatch(clearEditTask())
   };

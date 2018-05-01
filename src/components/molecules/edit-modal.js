@@ -23,12 +23,11 @@ export default class EditModal extends Component {
   }
 
   onClose() {
-    console.log(this);
     this.props.clearEditTask();
   }
 
   onUpdateItem(obj) {
-    console.log(obj);
+    this.props.setEditedItem(obj);
   }
 
   getEditItem() {
