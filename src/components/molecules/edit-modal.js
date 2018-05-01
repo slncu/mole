@@ -19,25 +19,29 @@ export default class EditModal extends Component {
     super();
 
     this.onClose = this.onClose.bind(this);
-    this.onConfirm = this.onConfirm.bind(this);
     this.getEditItem = this.getEditItem.bind(this);
   }
 
   onClose() {
+    console.log(this);
     this.props.clearEditTask();
   }
 
-  onConfirm() {
-
+  onUpdateItem(obj) {
+    console.log(obj);
   }
 
   getEditItem() {
-    const { title, content } = this.props.tasks.editItem[0];
-    console.log(this.props.tasks.editItem[0]);
+    const { id, title, content } = this.props.tasks.editItem[0];
+    const obj = { id, title, content }
+
     return(
       <div>
-        <div>{title}</div>
-        <div>{content}</div>
+        <input type="hidden" name="id" defaultValue={id} />
+        <input onChange={ e => ( obj.title = e.target.value ) } type="text" name="title" defaultValue={title} />
+        <input onChange={ e => ( obj.content = e.target.value ) } type="text" name="content" defaultValue={content} />
+        <button onClick={ this.onClose }>閉じる</button>
+        <button onClick={ () => { this.onUpdateItem(obj) } }>更新</button> 
       </div>
     )
   }
@@ -51,8 +55,6 @@ export default class EditModal extends Component {
           style={customStyles}
           contentLabel="Example Modal"
         >
-          <h2 ref={subtitle => this.subtitle = subtitle}>Hello</h2>
-          <button onClick={this.onClose}>close</button>
           { this.props.tasks.editItem[0] && this.getEditItem() }
         </Modal>
       </div>
