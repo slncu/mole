@@ -1,6 +1,8 @@
 import React, { Component } from 'react';
 import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
 
+import { ButtonEdit } from '../atoms/button';
+
 export default class DraggableCard extends Component {
   constructor (props) {
     super(props);
@@ -14,6 +16,7 @@ export default class DraggableCard extends Component {
 
   getItemStyle (isDragging, draggableStyle) {
     return {
+      position: 'relative',
       userSelect: 'none',
       padding: `${this.grid * 2}px`,
       margin: `0 0 ${this.grid}px`,
@@ -65,7 +68,6 @@ export default class DraggableCard extends Component {
     e.preventDefault();
     const { items } = this.props.tasks;
     const editItem = items.filter(item => (item.id === parseInt(e.currentTarget.id, 10)));
-    console.log(editItem)
 
     this.props.setEditItem(editItem);
     this.props.setEditTask();
@@ -88,7 +90,7 @@ export default class DraggableCard extends Component {
                         style={this.getItemStyle(snapshot.isDragging, provided.draggableProps.style)}
                       >
                         {item.content}
-                        <button id={item.id} onClick={e => this.onClickEdit(e)}>編集する</button>
+                        <ButtonEdit id={item.id} onClick={e => this.onClickEdit(e)}>編集する</ButtonEdit>
                       </div>
                     )}
                   </Draggable>

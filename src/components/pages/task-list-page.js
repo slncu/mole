@@ -16,7 +16,6 @@ import {
 
 class TaskListPage extends Component {
   render () {
-    // console.log(this);
     return (
       <div>
         <EditModal {...this.props} />

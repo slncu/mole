@@ -1,17 +1,5 @@
 const initialState = {
-  items: [{
-    id: 1,
-    title: 'example card',
-    content: 'This is example tasks card'
-  }, {
-    id: 2,
-    title: 'これはテストのタスクカード',
-    content: 'これはテストのタスクカード'
-  }, {
-    id: 3,
-    title: 'これはテストのタスクカード',
-    content: '・？？？？？？？'
-  }],
+  items: [],
   editItem: {},
   isEditable: false
 };
@@ -28,7 +16,6 @@ const CLEAR_MODE_EDIT = 'CLEAR_MODE_EDIT';
  */
 export default (state = initialState, action) => {
   let amount = state.items.length;
-  console.log(amount)
   switch (action.type) {
     case ADD_ITEM:
       amount++;

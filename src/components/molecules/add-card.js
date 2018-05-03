@@ -3,7 +3,6 @@ import React, { Component } from 'react';
 export default class AddCard extends Component {
   onClickAddCard(e) {
     e.preventDefault();
-    console.log(this.props.tasks.items.length)
     const newObj = [{
       id: this.props.tasks.items.length + 1,
       title: '',
