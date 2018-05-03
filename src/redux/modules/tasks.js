@@ -27,8 +27,13 @@ const CLEAR_MODE_EDIT = 'CLEAR_MODE_EDIT';
  * The tasks module reducer
  */
 export default (state = initialState, action) => {
+  let amount = state.items.length;
+  console.log(amount)
   switch (action.type) {
     case ADD_ITEM:
+      amount++;
+      const newObj = { id: amount, title:'', content: ''};
+      state.items.push(newObj);
       return { ...state };
     case SORT_LIST_ITEMS:
       return { ...state, items: action.payload };
@@ -52,13 +57,7 @@ export default (state = initialState, action) => {
 /**
  * The tasks module action
  */
-// export const addItem = () => {
-// let amountItems =
-// return {
-//   type: ADD_ITEM,
-//   payload:
-// }
-// }
+export const addItem = () => { return { type: ADD_ITEM } };
 
 /**
  * react-beautiful-dnd のソートで受け取った新しい配列をassignし、表示順を変える

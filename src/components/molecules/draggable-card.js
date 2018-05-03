@@ -64,7 +64,8 @@ export default class DraggableCard extends Component {
   onClickEdit (e) {
     e.preventDefault();
     const { items } = this.props.tasks;
-    const editItem = items.filter(item => (item.id === parseInt(e.currentTarget.id)));
+    const editItem = items.filter(item => (item.id === parseInt(e.currentTarget.id, 10)));
+    console.log(editItem)
 
     this.props.setEditItem(editItem);
     this.props.setEditTask();
