@@ -1,10 +1,8 @@
 import React, { Component } from 'react';
 import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
 
-import EditModal from './edit-modal';
-
 export default class DraggableCard extends Component {
-  constructor(props) {
+  constructor (props) {
     super(props);
 
     this.grid = 8;
@@ -14,14 +12,14 @@ export default class DraggableCard extends Component {
     this.onClickEdit = this.onClickEdit.bind(this);
   }
 
-  getItemStyle(isDragging, draggableStyle) {
+  getItemStyle (isDragging, draggableStyle) {
     return {
       userSelect: 'none',
-      padding: `${this.grid * 2 }px`,
+      padding: `${this.grid * 2}px`,
       margin: `0 0 ${this.grid}px`,
       border: `1px solid ${isDragging ? 'lightgreen' : 'grey'}`,
       ...draggableStyle
-    }
+    };
   }
 
   getListStyle (isDraggingOver) {
@@ -29,13 +27,13 @@ export default class DraggableCard extends Component {
       background: `${isDraggingOver ? 'lightblue' : 'lightgrey'}`,
       padding: this.grid,
       width: 250
-    }
-  };
+    };
+  }
 
   /**
    * タスクカードの順番を制御
    */
-  reorder(list, startIndex, endIndex) {
+  reorder (list, startIndex, endIndex) {
     const result = Array.from(list);
     const [removed] = result.splice(startIndex, 1);
     result.splice(endIndex, 0, removed);
@@ -46,7 +44,7 @@ export default class DraggableCard extends Component {
   /**
    * ドラッグ終了後の制御
    */
-  onDragEnd(result) {
+  onDragEnd (result) {
     const { items } = this.props.tasks;
 
     if (!result.destination) {
@@ -63,38 +61,38 @@ export default class DraggableCard extends Component {
   /**
    * 編集モードのon/off
    */
-  onClickEdit(e) {
+  onClickEdit (e) {
     e.preventDefault();
     const { items } = this.props.tasks;
-    const editItem = items.filter(item => ( item.id == e.currentTarget.id ));
+    const editItem = items.filter(item => (item.id === parseInt(e.currentTarget.id)));
 
     this.props.setEditItem(editItem);
     this.props.setEditTask();
   }
 
-  render() {
+  render () {
     const { items } = this.props.tasks;
 
     return (
       <DragDropContext onDragEnd={this.onDragEnd}>
         <div>
-          <Droppable droppableId="droppableCard">
+          <Droppable droppableId='droppableCard'>
             {(provided, snapshot) => (
               <div ref={provided.innerRef} style={this.getListStyle(snapshot.isDraggingOver)}>
                 {items.map((item, index) => (
                   <Draggable key={item.id} draggableId={item.id} index={index}>
                     {(provided, snapshot) => (
-                      <div 
+                      <div
                         ref={provided.innerRef} {...provided.draggableProps} {...provided.dragHandleProps}
                         style={this.getItemStyle(snapshot.isDragging, provided.draggableProps.style)}
                       >
                         {item.content}
-                        <button id={item.id} onClick={ e => this.onClickEdit(e) }>編集する</button>
+                        <button id={item.id} onClick={e => this.onClickEdit(e)}>編集する</button>
                       </div>
                     )}
                   </Draggable>
                 ))}
-                  {provided.placeholder}
+                {provided.placeholder}
               </div>
             )}
           </Droppable>

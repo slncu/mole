@@ -1,5 +1,5 @@
 import { createStore, applyMiddleware, compose } from 'redux';
-import logger from 'redux-logger'
+import logger from 'redux-logger';
 import reducer from './reducer';
 
 const middleware = [logger];
