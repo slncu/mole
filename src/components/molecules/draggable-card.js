@@ -1,7 +1,9 @@
 import React, { Component } from 'react';
 import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
 
-import { ButtonEdit } from '../atoms/button';
+import { EditButton } from '../atoms/button';
+import Const from '../../const';
+const { Color } = Const; 
 
 export default class DraggableCard extends Component {
   constructor (props) {
@@ -20,14 +22,18 @@ export default class DraggableCard extends Component {
       userSelect: 'none',
       padding: `${this.grid * 2}px`,
       margin: `0 0 ${this.grid}px`,
-      border: `1px solid ${isDragging ? 'lightgreen' : 'grey'}`,
+      background: `${ Color.WHITE }`,
+      border: `${ isDragging ? '2px solid ' + Color.THICK_GREEN : '1px solid ' + Color.GRAY }`,
+      borderRadius: '4px',
+      boxShadow: '1px 3px 5px rgba(0, 0, 0, .2)',
+      transform: [{ rotate: '90deg'}],
       ...draggableStyle
     };
   }
 
   getListStyle (isDraggingOver) {
     return {
-      background: `${isDraggingOver ? 'lightblue' : 'lightgrey'}`,
+      background: `${ Color.GRAY }`,
       padding: this.grid,
       width: 250
     };
@@ -89,8 +95,8 @@ export default class DraggableCard extends Component {
                         ref={provided.innerRef} {...provided.draggableProps} {...provided.dragHandleProps}
                         style={this.getItemStyle(snapshot.isDragging, provided.draggableProps.style)}
                       >
-                        {item.content}
-                        <ButtonEdit id={item.id} onClick={e => this.onClickEdit(e)}>編集する</ButtonEdit>
+                        {item.title}
+                        <EditButton id={item.id} onClick={e => this.onClickEdit(e)}>編集する</EditButton>
                       </div>
                     )}
                   </Draggable>
