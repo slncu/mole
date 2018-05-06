@@ -32,8 +32,8 @@ export default class AddCard extends Component {
 }
 
 const Wrapper = styled.div`
-  width: 250px;
-  padding: 0 8px 16px;
+  width: 360px;
+  padding: 16px 8px;
   background-color: ${Color.GRAY};
   text-align: right;
 `;
