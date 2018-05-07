@@ -1,4 +1,23 @@
 const initialState = {
+  lists:[{
+    listId: 0,
+    items: [{
+      id: 0,
+      title: 'てすとの'
+    },{
+      id: 1,
+      title: 'かーど'
+    }]
+  },{
+    listId: 1,
+    items: [{
+      id: 2,
+      title: 'テストの'
+    },{
+      id: 3,
+      title: 'カード'
+    }]
+  }],
   items: [],
   editItem: {},
   isEditable: false
@@ -16,6 +35,8 @@ const CLEAR_MODE_EDIT = 'CLEAR_MODE_EDIT';
  */
 export default (state = initialState, action) => {
   let amount = state.items.length;
+  const a = Object.assign({}, state)
+  console.log(a)
   switch (action.type) {
     case ADD_ITEM:
       amount++;
@@ -23,7 +44,7 @@ export default (state = initialState, action) => {
       state.items.push(newObj);
       return { ...state };
     case SORT_LIST_ITEMS:
-      return { ...state, items: action.payload };
+      return { ...state };
     case SET_EDIT_ITEM:
       return { ...state, editItem: action.payload };
     case SET_EDITED_ITEM:

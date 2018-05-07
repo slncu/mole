@@ -2,9 +2,14 @@ import React, { Component } from 'react';
 import styled from 'styled-components';
 import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
 
+import AddCard from './add-card';
 import { EditButton } from '../atoms/button';
 import Const from '../../const';
-const { Color, Font } = Const; 
+const { Color, Font } = Const;
+
+const getArrayMap = str => {
+  return str.slice(-1);
+}
 
 export default class Card extends Component {
   constructor (props) {
@@ -44,6 +49,14 @@ export default class Card extends Component {
   }
 
   /**
+   * タスクカードの情報を取得する
+   */
+  getTaskInfo() {
+    const { lists } = this.props.tasks;
+    return lists.map(list => ( list ));
+  }
+
+  /**
    * タスクカードの順番を制御
    */
   reorder (list, startIndex, endIndex) {
@@ -51,24 +64,32 @@ export default class Card extends Component {
     const [removed] = result.splice(startIndex, 1);
     result.splice(endIndex, 0, removed);
 
+    return result;
     this.props.sortListItems(result);
+  }
+
+  // source, destination, droppableSource, droppableDestination
+  onMoveListToList(ary, result) {
+    const cloneAry = Array.from(ary);
+    const { draggableId, destination, source } = result;
+    const srcMap = getArrayMap(source.droppableId);
+    const destMap = getArrayMap(destination.droppableId);
+    const [removed] = cloneAry[srcMap].items.splice(source.index, 1);
+    return ary[destMap].items.splice(destination.index, 0, removed);
   }
 
   /**
    * ドラッグ終了後の制御
    */
   onDragEnd (result) {
-    const { items } = this.props.tasks;
-
-    if (!result.destination) {
-      return;
-    }
-
-    this.reorder(
-      items,
-      result.source.index,
-      result.destination.index
+    if (!result.destination) return;
+    const lists = this.getTaskInfo();
+    const draggedItems = this.onMoveListToList(
+      lists,
+      result
     );
+
+    this.props.sortListItems(draggedItems);
   }
 
   /**
@@ -76,59 +97,81 @@ export default class Card extends Component {
    */
   onClickEdit (e) {
     e.preventDefault();
-    const { items } = this.props.tasks;
-    const editItem = items.filter(item => (item.id === parseInt(e.currentTarget.id, 10)));
+    // const { items } = this.props.tasks;
+    // const editItem = items.filter(item => (item.id === parseInt(e.currentTarget.id, 10)));
+    const { lists } = this.props.tasks;
+    const editItem = lists.map(list => ( list.items ).filter(item => {
+      return item.id === parseInt(e.currentTarget.id, 10) 
+    }));
+    console.log(editItem)
 
-    this.props.setEditItem(editItem);
-    this.props.setEditTask();
+    // this.props.setEditItem(editItem);
+    // this.props.setEditTask();
   }
 
   render () {
-    const { items } = this.props.tasks;
+    const { lists, items } = this.props.tasks;
 
     return (
-      <Wrapper>
-        <DragDropContext onDragEnd={this.onDragEnd}>
-          <div>
-            <Droppable droppableId='droppableCard'>
-              {(provided, snapshot) => (
-                <div ref={provided.innerRef} style={this.getListStyle(snapshot.isDraggingOver)}>
-                  {items.map((item, index) => (
-                    <Draggable key={item.id} draggableId={item.id} index={index}>
-                      {(provided, snapshot) => (
-                        <div
-                          ref={provided.innerRef} {...provided.draggableProps} {...provided.dragHandleProps}
-                          style={this.getItemStyle(snapshot.isDragging, provided.draggableProps.style)}
-                        >
-                          {item.title}
-                          <SubContents>
-                            <Deadend>
-                              <img src="/times.svg" />
-                              <span>5/6 13:00まで</span>
-                            </Deadend>
-                            <EditButton id={item.id} onClick={e => this.onClickEdit(e)}>編集する</EditButton>
-                          </SubContents>
-                        </div>
-                      )}
-                    </Draggable>
-                  ))}
-                  {provided.placeholder}
-                </div>
-              )}
-            </Droppable>
-          </div>
-        </DragDropContext>
-      </Wrapper>
+      <DragDropContext onDragEnd={this.onDragEnd}>
+        { lists.map((list, listnum) => (
+            <ListWrapper key={list.listId} >
+              <ContentCard>
+                <Droppable droppableId={`droppableCard-${list.listId}`}>
+                  {(provided, snapshot) => (
+                    <div ref={provided.innerRef} style={this.getListStyle(snapshot.isDraggingOver)}>
+                      { list.items.map((item, itemnum) => (
+                        <Draggable key={item.id} draggableId={item.id} index={itemnum}>
+                          {(provided, snapshot) => (
+                            <div
+                              ref={provided.innerRef} {...provided.draggableProps} {...provided.dragHandleProps}
+                              style={this.getItemStyle(snapshot.isDragging, provided.draggableProps.style)}
+                            >
+                              {item.title}
+                              <SubContents>
+                                <Deadend>
+                                  <img src="/times.svg" />
+                                  <span>5/6 13:00まで</span>
+                                </Deadend>
+                                <EditButton id={item.id} onClick={e => this.onClickEdit(e)}>編集する</EditButton>
+                              </SubContents>
+                            </div>
+                          )}
+                        </Draggable>
+                      ))}
+                      {provided.placeholder}
+                    </div>
+                  )}
+                </Droppable>
+              </ContentCard>
+              <AddCard />
+            </ListWrapper>
+        ))}
+      </DragDropContext>
     );
   }
 }
 
-const Wrapper = styled.div`
+const ContentCard = styled.div`
   width: 376px;
   min-height: 0;
   box-sizing: content-box;
   overflow: scroll;
 `;
+
+const ListWrapper = styled.div`
+  display: flex;
+  flex-direction: column;
+  width: 368px;
+  float: left;
+  height: 100%;
+`;
+
+const List = styled.div`
+  display: flex;
+  height: 100%;
+  max-height: 100%;
+`
 
 const SubContents = styled.div`
   display: flex;

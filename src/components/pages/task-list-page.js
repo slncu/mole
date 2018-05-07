@@ -4,7 +4,6 @@ import styled from 'styled-components';
 
 import EditModal from '../molecules/edit-modal';
 import Card from '../molecules/Card';
-import AddCard from '../molecules/add-card';
 
 import {
   addItem,
@@ -20,12 +19,7 @@ class TaskListPage extends Component {
     return (
       <Contents>
         <EditModal {...this.props} />
-        <Lists>
-          <TodoList>
-            <Card {...this.props} />
-            <AddCard {...this.props} />
-          </TodoList>
-        </Lists>
+        <Card {...this.props} />
       </Contents>
     );
   }
@@ -35,34 +29,6 @@ const Contents = styled.div`
   width: 100%;
   height: 100%;
 `;
-
-const Lists = styled.div`
-  display: flex;
-  height: 100%;
-`
-
-const TodoList = styled.div`
-  display: flex;
-  flex-direction: column;
-  height: 100%;
-  max-height: 100%;
-`
-
-const DoingList = styled.div`
-  display: flex;
-  flex-direction: column;
-  height: 100%;
-  max-height: 100%;
-  margin-left: 16px;
-`
-
-const DoneList = styled.div`
-  display: flex;
-  flex-direction: column;
-  height: 100%;
-  max-height: 100%;
-  margin-left: 16px;
-`
 
 function mapStateToProps (state) {
   return {
