@@ -19,7 +19,7 @@ class TaskListPage extends Component {
     return (
       <Contents>
         <EditModal {...this.props} />
-        <Card {...this.props} />
+        <Card />
       </Contents>
     );
   }

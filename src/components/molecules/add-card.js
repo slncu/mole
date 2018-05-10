@@ -7,23 +7,19 @@ import Const from '../../const';
 const { Color } = Const;
 
 export default class AddCard extends Component {
-  onClickAddCard(e) {
-    e.preventDefault();
+  onClickAddCard() {
+    const { listId } = this.props;
     const newObj = [{
-      id: this.props.tasks.items.length + 1,
+      id: '',
       title: '',
       content: ''
     }];
-
-    this.props.addItem();
-    this.props.setEditItem(newObj);
-    this.props.setEditTask();
   }
 
   render() {
     return (
       <Wrapper>
-        <AddButton onClick={ e => { this.onClickAddCard(e)}}>
+        <AddButton onClick={ () => { this.onClickAddCard()}}>
           カードを追加する
         </AddButton>
       </Wrapper>

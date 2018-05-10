@@ -1,17 +1,25 @@
 import React, { Component } from 'react';
 import styled from 'styled-components';
+import { connect } from 'react-redux';
 import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
-
 import AddCard from './add-card';
 import { EditButton } from '../atoms/button';
 import Const from '../../const';
+import {
+  addItem,
+  sortListItems,
+  setEditTask,
+  setEditedItem,
+  clearEditTask,
+  setEditItem
+} from '../../redux/modules/tasks';
 const { Color, Font } = Const;
 
 const getArrayMap = str => {
   return str.slice(-1);
 }
 
-export default class Card extends Component {
+class Card extends Component {
   constructor (props) {
     super(props);
 
@@ -70,12 +78,13 @@ export default class Card extends Component {
 
   // source, destination, droppableSource, droppableDestination
   onMoveListToList(ary, result) {
+    let sortedItem;
     const cloneAry = Array.from(ary);
     const { draggableId, destination, source } = result;
     const srcMap = getArrayMap(source.droppableId);
     const destMap = getArrayMap(destination.droppableId);
     const [removed] = cloneAry[srcMap].items.splice(source.index, 1);
-    return ary[destMap].items.splice(destination.index, 0, removed);
+    const hoge = cloneAry[destMap].items.splice(destination.index, 0, removed);
   }
 
   /**
@@ -83,13 +92,11 @@ export default class Card extends Component {
    */
   onDragEnd (result) {
     if (!result.destination) return;
-    const lists = this.getTaskInfo();
-    const draggedItems = this.onMoveListToList(
+    const lists = Array.from(this.getTaskInfo());
+    const sortedItem = this.onMoveListToList(
       lists,
       result
     );
-
-    this.props.sortListItems(draggedItems);
   }
 
   /**
@@ -103,14 +110,9 @@ export default class Card extends Component {
     const editItem = lists.map(list => ( list.items ).filter(item => {
       return item.id === parseInt(e.currentTarget.id, 10) 
     }));
-    console.log(editItem)
-
-    // this.props.setEditItem(editItem);
-    // this.props.setEditTask();
   }
 
   render () {
-    const { lists, items } = this.props.tasks;
 
     return (
       <DragDropContext onDragEnd={this.onDragEnd}>
@@ -144,13 +146,16 @@ export default class Card extends Component {
                   )}
                 </Droppable>
               </ContentCard>
-              <AddCard />
+              <AddCard listId={list.listId} addItem={this.props.addItem}/>
             </ListWrapper>
         ))}
       </DragDropContext>
     );
   }
 }
+
+
+export default Card;
 
 const ContentCard = styled.div`
   width: 376px;
