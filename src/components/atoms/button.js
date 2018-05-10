@@ -1,8 +1,8 @@
-import React from 'react';
-import styled from 'styled-components';
+import React from 'react'
+import styled from 'styled-components'
 
 import Const from '../../const'
-const { Color, Font } = Const;
+const { Color, Font } = Const
 
 export const EditButton = props => {
   return (
@@ -12,7 +12,7 @@ export const EditButton = props => {
       </BtnPrimary>
     </Wrapper>
   )
-};
+}
 
 export const AddButton = props => {
   return (
@@ -27,7 +27,7 @@ export const AddButton = props => {
 const Wrapper = styled.div`
   display: block;
   text-align: right;
-`;
+`
 
 const BtnPrimary = styled.button`
   font-size: ${Font.SIZE.SMALL};
@@ -44,7 +44,7 @@ const BtnPrimary = styled.button`
   &:hover {
     opacity: .8;
   }
-`;
+`
 
 const BtnAdd = styled.button`
   display: block;
@@ -64,4 +64,4 @@ const BtnAdd = styled.button`
   &:hover {
     opacity: .8;
   }
-`;
+`

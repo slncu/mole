@@ -1,25 +1,25 @@
-import React, { Component } from 'react';
-import styled from 'styled-components';
+import React, { Component } from 'react'
+import styled from 'styled-components'
 
-import { AddButton } from '../atoms/button';
+import { AddButton } from '../atoms/button'
 
-import Const from '../../const';
-const { Color } = Const;
+import Const from '../../const'
+const { Color } = Const
 
 export default class AddCard extends Component {
-  onClickAddCard() {
-    const { listId } = this.props;
+  onClickAddCard () {
+    const { listId } = this.props
     const newObj = [{
       id: '',
       title: '',
       content: ''
-    }];
+    }]
   }
 
-  render() {
+  render () {
     return (
       <Wrapper>
-        <AddButton onClick={ () => { this.onClickAddCard()}}>
+        <AddButton onClick={() => { this.onClickAddCard() }}>
           カードを追加する
         </AddButton>
       </Wrapper>
@@ -32,4 +32,4 @@ const Wrapper = styled.div`
   padding: 16px 8px;
   background-color: ${Color.GRAY};
   text-align: right;
-`;
+`

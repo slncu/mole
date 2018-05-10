@@ -1,9 +1,9 @@
-import React, { Component } from 'react';
-import { connect } from 'react-redux';
-import styled from 'styled-components';
+import React, { Component } from 'react'
+import { connect } from 'react-redux'
+import styled from 'styled-components'
 
-import EditModal from '../molecules/edit-modal';
-import Card from '../molecules/Card';
+import EditModal from '../molecules/edit-modal'
+import Card from '../molecules/Card'
 
 import {
   addItem,
@@ -12,7 +12,7 @@ import {
   setEditedItem,
   clearEditTask,
   setEditItem
-} from '../../redux/modules/tasks';
+} from '../../redux/modules/tasks'
 
 class TaskListPage extends Component {
   render () {
@@ -21,19 +21,19 @@ class TaskListPage extends Component {
         <EditModal {...this.props} />
         <Card />
       </Contents>
-    );
+    )
   }
 }
 
 const Contents = styled.div`
   width: 100%;
   height: 100%;
-`;
+`
 
 function mapStateToProps (state) {
   return {
     tasks: state.tasks
-  };
+  }
 }
 
 function mapDispatchToProps (dispatch) {
@@ -44,7 +44,7 @@ function mapDispatchToProps (dispatch) {
     setEditedItem: obj => dispatch(setEditedItem(obj)),
     setEditTask: () => dispatch(setEditTask()),
     clearEditTask: () => dispatch(clearEditTask())
-  };
+  }
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(TaskListPage);
+export default connect(mapStateToProps, mapDispatchToProps)(TaskListPage)

@@ -1,12 +1,12 @@
-import React, { Component } from 'react';
-import styled from 'styled-components';
+import React, { Component } from 'react'
+import styled from 'styled-components'
 
-import Card from '../molecules/Card';
-import AddCard from '../molecules/add-card';
+import Card from '../molecules/Card'
+import AddCard from '../molecules/add-card'
 
 export default class CardList extends Component {
-  render() {
-    const { lists } = this.props.tasks;
+  render () {
+    const { lists } = this.props.tasks
 
     return (
       <ListWrapper>
@@ -14,7 +14,7 @@ export default class CardList extends Component {
           <Card {...this.props} />
         </List>
       </ListWrapper>
-    );
+    )
   }
 }
 
