@@ -1,17 +1,33 @@
+// @flow
+
 import React, { Component } from 'react'
+import { connect } from 'react-redux'
 import styled from 'styled-components'
 import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd'
 import AddCard from './add-card'
 import { EditButton } from '../atoms/button'
 import Const from '../../const'
+import type { Tasks } from '../../redux/modules/tasks'
+import type { Dispatch } from 'redux'
 const { Color, Font } = Const
+
+type Props = {
+  tasks: Tasks
+}
+
 
 const getArrayMap = str => {
   return str.slice(-1)
 }
 
-class Card extends Component {
-  constructor (props) {
+class Card extends Component<Props> {
+  grid: number;
+  getItemStyle: Function;
+  reorder: Function;
+  onDragEnd: Function;
+  onClickEdit: Function;
+
+  constructor (props: Props) {
     super(props)
 
     this.grid = 8
@@ -21,7 +37,7 @@ class Card extends Component {
     this.onClickEdit = this.onClickEdit.bind(this)
   }
 
-  getItemStyle (isDragging, draggableStyle) {
+  getItemStyle(isDragging: boolean, draggableStyle: Object) {
     return {
       position: 'relative',
       userSelect: 'none',
@@ -39,7 +55,7 @@ class Card extends Component {
     }
   }
 
-  getListStyle (isDraggingOver) {
+  getListStyle () {
     return {
       background: `${Color.GRAY}`,
       padding: this.grid,
@@ -102,22 +118,24 @@ class Card extends Component {
   }
 
   render () {
+    const { lists } = this.props.tasks
+
     return (
       <DragDropContext onDragEnd={this.onDragEnd}>
-        { lists.map((list, listnum) => (
-          <ListWrapper key={list.listId} >
+        { lists.map((list, index) => (
+          <ListWrapper key={list.id} >
             <ContentCard>
-              <Droppable droppableId={`droppableCard-${list.listId}`}>
+              <Droppable droppableId={`droppableCard-${list.id}`}>
                 {(provided, snapshot) => (
-                  <div ref={provided.innerRef} style={this.getListStyle(snapshot.isDraggingOver)}>
-                    { list.items.map((item, itemnum) => (
-                      <Draggable key={item.id} draggableId={item.id} index={itemnum}>
+                  <div ref={provided.innerRef} style={this.getListStyle()}>
+                    { list.items.map((item, itemIndex) => (
+                      <Draggable key={item.id} draggableId={item.id} index={itemIndex}>
                         {(provided, snapshot) => (
                           <div
                             ref={provided.innerRef} {...provided.draggableProps} {...provided.dragHandleProps}
                             style={this.getItemStyle(snapshot.isDragging, provided.draggableProps.style)}
                           >
-                            {item.title}
+                            {item.content}
                             <SubContents>
                               <Deadend>
                                 <img src='/times.svg' />
@@ -134,7 +152,7 @@ class Card extends Component {
                 )}
               </Droppable>
             </ContentCard>
-            <AddCard listId={list.listId} addItem={this.props.addItem} />
+            <AddCard listId={list.id} />
           </ListWrapper>
         ))}
       </DragDropContext>
@@ -142,7 +160,7 @@ class Card extends Component {
   }
 }
 
-export default Card
+export default connect((tasks) => (tasks: Tasks))(Card)
 
 const ContentCard = styled.div`
   width: 376px;

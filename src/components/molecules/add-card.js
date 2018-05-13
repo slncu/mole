@@ -1,31 +1,43 @@
+// @flow
 import React, { Component } from 'react'
+import { connect } from 'react-redux'
+import type { Dispatch } from 'redux'
 import styled from 'styled-components'
-
 import { AddButton } from '../atoms/button'
-
+import { addCard, incrementCardAmount } from '../../redux/modules/tasks'
 import Const from '../../const'
 const { Color } = Const
 
-export default class AddCard extends Component {
-  onClickAddCard () {
-    const { listId } = this.props
-    const newObj = [{
-      id: '',
-      title: '',
-      content: ''
-    }]
+type Props = {
+  listId: number,
+  addCard: (listId: number) => void,
+  incrementCardAmount: () => void
+}
+
+function AddCard(props: Props) {
+  function onClick(e) {
+    props.incrementCardAmount()
+    props.addCard(props.listId)
   }
 
-  render () {
-    return (
-      <Wrapper>
-        <AddButton onClick={() => { this.onClickAddCard() }}>
-          カードを追加する
-        </AddButton>
-      </Wrapper>
-    )
+  console.log(props)
+  return (
+    <Wrapper>
+      <AddButton onClick={(e) => { onClick(e) }}>
+        カードを追加する
+      </AddButton>
+    </Wrapper>
+  )
+}
+
+function mapDispatchToProps(dispatch: Dispatch) {
+  return {
+    addCard: (listId) => dispatch(addCard(listId)),
+    incrementCardAmount: () => dispatch(incrementCardAmount())
   }
 }
+
+export default connect(null, mapDispatchToProps)(AddCard)
 
 const Wrapper = styled.div`
   width: 360px;

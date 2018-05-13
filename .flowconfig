@@ -1,5 +1,7 @@
 [ignore]
-.*/node_modules/.*
+.*/node_modules/redux-persist/es/index.js.flow
+.*/node_modules/redux-persist/lib/index.js.flow
+.*/node_modules/stylelint/lib/.*
 
 [include]
 
@@ -8,5 +10,7 @@
 [lints]
 
 [options]
+module.name_mapper='^~/src\/\(.*\)$' -> '<PROJECT_ROOT>/src/\1'
+module.name_mapper='^~/assets\/\(.*\)$' -> '<PROJECT_ROOT>/assets/\1'
 
 [strict]
