@@ -1,5 +1,6 @@
 // @flow
 import type { Dispatch } from 'redux'
+import type { State } from '../'
 import _ from 'lodash'
 
 type Item = {
@@ -48,7 +49,7 @@ type DecrementCardAmount = { type: 'tasks/DECREMENT_CARD_AMOUNT' }
 
 type AddCard = {
   type: 'tasks/ADD_CARD',
-  payload: number
+  payload: List
 }
 
 type EditCard = {
@@ -83,14 +84,11 @@ type Actions = IncrementCardAmount |
 export default (state: Tasks = initialState, action: Actions) => {
   switch (action.type) {
     case INCREMENT_CARD_AMOUNT:
-      return Object.assign({}, state, {
-        cardAmount: state.cardAmount + 1
-      })
+      return { ...state, cardAmount: state.cardAmount + 1 }
+    case DECREMENT_CARD_AMOUNT:
+      return Object.assign({}, state, { cardAmount: state.cardAmount - 1 })
     case ADD_CARD:
-      const lists: Array<List> = Array.from(state.lists)
-      const filter: Array<List> = lists.filter(list => (list.id === action.payload))
-      filter[0].items.push({id: state.cardAmount, content:''})
-      return Object.assign({}, state, { lists })
+      return { ...state, lists: action.payload }
     case EDIT_CARD:
       return state;
     case SORT_CARD:
@@ -104,9 +102,9 @@ export default (state: Tasks = initialState, action: Actions) => {
 /**
  * Actions
  */
-export const setCardAmount = (): IncrementCardAmount => {
-  return { type: 'tasks/SET_CARD_AMOUNT' }
-}
+// export const setCardAmount = (): IncrementCardAmount => {
+//   return { type: 'tasks/SET_CARD_AMOUNT' }
+// }
 
 
 export const incrementCardAmount = (): IncrementCardAmount => {
@@ -117,10 +115,19 @@ export const decrementCardAmount = (): DecrementCardAmount => {
   return { type: 'tasks/DECREMENT_CARD_AMOUNT' }
 }
 
-export const addCard = (listId: number): AddCard => {
+const addCard = (list: List): AddCard => {
   return {
     type: 'tasks/ADD_CARD',
-    payload: listId
+    payload: list
   }
 }
 
+export const dispatchAddCard = (listId: number) => (dispatch: Dispatch, getState: () => State) => {
+  dispatch(incrementCardAmount())
+
+  const state = getState()
+  const list = state.tasks.lists.filter(list => ( list.id === listId ))
+  list[0].items.push({id: state.tasks.cardAmount, content:''})
+
+  dispatch(addCard(list))
+}
