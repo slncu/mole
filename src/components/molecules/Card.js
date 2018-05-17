@@ -7,23 +7,33 @@ import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd'
 import AddCard from './add-card'
 import { EditButton } from '../atoms/button'
 import Const from '../../const'
+import { dispatchSortCard } from '../../redux/modules/tasks'
 import type { Tasks } from '../../redux/modules/tasks'
 import type { Dispatch } from 'redux'
 const { Color, Font } = Const
 
-type Props = {
-  tasks: Tasks
+type Item = {
+  id: number,
+  content: string
 }
 
+type List = {
+  id: number,
+  items: Array<Item>
+}
+
+type Props = {
+  tasks: Tasks,
+  dispatchSortCard: Array<List> => void
+}
 
 const getArrayMap = str => {
-  return str.slice(-1)
+  return parseInt(str.slice(-1), 10) - 1
 }
 
 class Card extends Component<Props> {
   grid: number;
   getItemStyle: Function;
-  reorder: Function;
   onDragEnd: Function;
   onClickEdit: Function;
 
@@ -32,7 +42,6 @@ class Card extends Component<Props> {
 
     this.grid = 8
     this.getItemStyle = this.getItemStyle.bind(this)
-    this.reorder = this.reorder.bind(this)
     this.onDragEnd = this.onDragEnd.bind(this)
     this.onClickEdit = this.onClickEdit.bind(this)
   }
@@ -71,17 +80,6 @@ class Card extends Component<Props> {
     return lists.map(list => (list))
   }
 
-  /**
-   * タスクカードの順番を制御
-   */
-  reorder (list, startIndex, endIndex) {
-    const result = Array.from(list)
-    const [removed] = result.splice(startIndex, 1)
-    result.splice(endIndex, 0, removed)
-
-    return result
-  }
-
   // source, destination, droppableSource, droppableDestination
   onMoveListToList (ary, result) {
     const cloneAry = Array.from(ary)
@@ -89,7 +87,9 @@ class Card extends Component<Props> {
     const srcMap = getArrayMap(source.droppableId)
     const destMap = getArrayMap(destination.droppableId)
     const [removed] = cloneAry[srcMap].items.splice(source.index, 1)
-    return cloneAry[destMap].items.splice(destination.index, 0, removed)
+    cloneAry[destMap].items.splice(destination.index, 0, removed)
+    console.log(cloneAry)
+    this.props.dispatchSortCard(cloneAry)
   }
 
   /**
@@ -98,10 +98,7 @@ class Card extends Component<Props> {
   onDragEnd (result) {
     if (!result.destination) return
     const lists = Array.from(this.getTaskInfo())
-    this.onMoveListToList(
-      lists,
-      result
-    )
+    this.onMoveListToList(lists,result)
   }
 
   /**
@@ -160,7 +157,9 @@ class Card extends Component<Props> {
   }
 }
 
-export default connect((tasks) => (tasks: Tasks))(Card)
+export default connect(((tasks) => (tasks: Tasks)), {
+  dispatchSortCard
+})(Card)
 
 const ContentCard = styled.div`
   width: 376px;
@@ -175,12 +174,6 @@ const ListWrapper = styled.div`
   width: 368px;
   float: left;
   height: 100%;
-`
-
-const List = styled.div`
-  display: flex;
-  height: 100%;
-  max-height: 100%;
 `
 
 const SubContents = styled.div`
