@@ -57,9 +57,9 @@ const initialState = {
 const INCREMENT_CARD_AMOUNT = 'tasks/INCREMENT_CARD_AMOUNT'
 const DECREMENT_CARD_AMOUNT = 'tasks/DECREMENT_CARD_AMOUNT'
 const ADD_CARD = 'tasks/ADD_CARD'
-const EDIT_CARD = 'tasks/EDIT_CARD'
 const SORT_CARD = 'tasks/SORT_CARD'
 const IS_EDITABLE = 'tasks/IS_EDITABLE'
+const SET_EDIT_CARD = 'tasks/SET_EDIT_CARD'
 
 type IncrementCardAmount = { type: 'tasks/INCREMENT_CARD_AMOUNT' }
 
@@ -85,10 +85,15 @@ type IsEditable = {
   payload: boolean
 }
 
+type SetEditCard = {
+  type: 'tasks/SET_EDIT_CARD',
+  payload: Item
+}
+
 type Actions = IncrementCardAmount |
                DecrementCardAmount |
                AddCard |
-               EditCard |
+               SetEditCard |
                SortCard |
                IsEditable;
 
@@ -104,8 +109,8 @@ export default (state: Tasks = initialState, action: Actions) => {
       return Object.assign({}, state, { cardAmount: state.cardAmount - 1 })
     case ADD_CARD:
       return Object.assign({}, state, {lists: action.payload})
-    case EDIT_CARD:
-      return state;
+    case SET_EDIT_CARD:
+      return Object.assign({}, state, {editItem: action.payload});
     case SORT_CARD:
       return Object.assign({}, state, {lists: action.payload})
     case IS_EDITABLE:
@@ -137,6 +142,31 @@ export const isEditable = (isEditable: boolean): IsEditable => {
   }
 }
 
+export const setEditCard = (item: Item): SetEditCard => {
+  return {
+    type: SET_EDIT_CARD,
+    payload: item
+  }
+}
+
+export const dispatchSetEditCard = (id: number) => (dispatch: Dispatch, getState: () => State) => {
+  console.log(id)
+  const state = getState()
+  let editItem = [];
+  const clone = _.cloneDeep(state.tasks.lists).forEach(list => (list.items.map(item => {
+    if(item.id === id) {
+      editItem.push(item)
+    }
+  })
+))
+
+  dispatch(setEditCard(editItem[0]))
+}
+
+export const dispatchEditCard = (isOpen: boolean) => (dispatch: Dispatch) => {
+  dispatch(isEditable(isOpen))
+}
+
 export const dispatchAddCard = (listId: number) => (dispatch: Dispatch, getState: () => State) => {
   dispatch(incrementCardAmount())
 
@@ -159,6 +189,5 @@ export const sortCard = (list: Array<List>) =>{
 }
 
 export const dispatchSortCard = (list: Array<List>) => (dispatch: Dispatch) => {
-  console.log(list)
   dispatch(sortCard(list))
 }

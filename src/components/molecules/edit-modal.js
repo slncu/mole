@@ -1,7 +1,21 @@
 // @flow
 
 import React, { Component } from 'react'
+import styled from 'styled-components'
+import { connect } from 'react-redux'
 import Modal from 'react-modal'
+import { dispatchEditCard } from '../../redux/modules/tasks'
+
+type Item = {
+  id: number,
+  content: string
+}
+
+type Props = {
+  editItem: Item,
+  isEditable: boolean,
+  dispatchEditCard: boolean => void
+}
 
 const customStyles = {
   content: {
@@ -16,7 +30,10 @@ const customStyles = {
 
 Modal.setAppElement('#root')
 
-export default class EditModal extends Component {
+class EditModal extends Component<Props> {
+  onClose: Function
+  getEditItem: Function
+
   constructor () {
     super()
 
@@ -25,28 +42,29 @@ export default class EditModal extends Component {
   }
 
   onClose () {
+    this.props.dispatchEditCard(false)
   }
 
-  onUpdateItem (obj) {
+  onUpdateItem (obj: Item) {
+    this.props.dispatchEditCard(false)
   }
 
   getEditItem () {
-    const { id, title, content } = this.props.tasks.editItem[0]
-    const obj = { id, title, content }
+    const { id, content } = this.props.editItem
+    const obj = { id, content }
 
     return (
-      <div>
+      <WrapperModal>
         <input type='hidden' name='id' defaultValue={id} />
-        <input onChange={e => (obj.title = e.target.value)} type='text' name='title' defaultValue={title} />
         <input onChange={e => (obj.content = e.target.value)} type='text' name='content' defaultValue={content} />
         <button onClick={this.onClose}>閉じる</button>
         <button onClick={() => { this.onUpdateItem(obj) }}>更新</button>
-      </div>
+      </WrapperModal>
     )
   }
 
   render () {
-    const { isEditable } = this.props.tasks
+    const { isEditable } = this.props
     return (
       <div>
         <Modal
@@ -54,9 +72,18 @@ export default class EditModal extends Component {
           style={customStyles}
           contentLabel='Example Modal'
         >
-          { this.props.tasks.editItem[0] && this.getEditItem() }
+          { this.props.editItem && this.getEditItem() }
         </Modal>
       </div>
     )
   }
 }
+
+export default connect(null, {
+  dispatchEditCard
+})(EditModal)
+
+const WrapperModal = styled.div`
+  width: 350px;
+  height: 350px;
+`

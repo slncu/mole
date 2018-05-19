@@ -5,9 +5,12 @@ import { connect } from 'react-redux'
 import styled from 'styled-components'
 import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd'
 import AddCard from './add-card'
+import EditModal from './edit-modal'
 import { EditButton } from '../atoms/button'
 import Const from '../../const'
-import { dispatchSortCard } from '../../redux/modules/tasks'
+import { dispatchSortCard,
+         dispatchEditCard,
+         dispatchSetEditCard } from '../../redux/modules/tasks'
 import type { Tasks } from '../../redux/modules/tasks'
 import type { Dispatch } from 'redux'
 const { Color, Font } = Const
@@ -24,7 +27,9 @@ type List = {
 
 type Props = {
   tasks: Tasks,
-  dispatchSortCard: Array<List> => void
+  dispatchSortCard: Array<List> => void,
+  dispatchEditCard: boolean => void,
+  dispatchSetEditCard: number => void
 }
 
 const getArrayMap = str => {
@@ -104,61 +109,61 @@ class Card extends Component<Props> {
   /**
    * 編集モードのon/off
    */
-  onClickEdit (e) {
-    e.preventDefault()
-    // const { items } = this.props.tasks;
-    // const editItem = items.filter(item => (item.id === parseInt(e.currentTarget.id, 10)));
-    // const { lists } = this.props.tasks
-    // const editItem = lists.map(list => (list.items).filter(item => {
-    //   return item.id === parseInt(e.currentTarget.id, 10)
-    // }))
+  onClickEdit (e, id: number) {
+    this.props.dispatchSetEditCard(id)
+    this.props.dispatchEditCard(true)
   }
 
   render () {
-    const { lists } = this.props.tasks
+    const { lists, editItem, isEditable } = this.props.tasks
 
     return (
-      <DragDropContext onDragEnd={this.onDragEnd}>
-        { lists.map((list, index) => (
-          <ListWrapper key={list.id} >
-            <ContentCard>
-              <Droppable droppableId={`droppableCard-${list.id}`}>
-                {(provided, snapshot) => (
-                  <div ref={provided.innerRef} style={this.getListStyle()}>
-                    { list.items.map((item, itemIndex) => (
-                      <Draggable key={item.id} draggableId={item.id} index={itemIndex}>
-                        {(provided, snapshot) => (
-                          <div
-                            ref={provided.innerRef} {...provided.draggableProps} {...provided.dragHandleProps}
-                            style={this.getItemStyle(snapshot.isDragging, provided.draggableProps.style)}
-                          >
-                            {item.content}
-                            <SubContents>
-                              <Deadend>
-                                <img src='/times.svg' />
-                                <span>5/6 13:00まで</span>
-                              </Deadend>
-                              <EditButton id={item.id} onClick={e => this.onClickEdit(e)}>編集する</EditButton>
-                            </SubContents>
-                          </div>
-                        )}
-                      </Draggable>
-                    ))}
-                    {provided.placeholder}
-                  </div>
-                )}
-              </Droppable>
-            </ContentCard>
-            <AddCard listId={list.id} />
-          </ListWrapper>
-        ))}
-      </DragDropContext>
+      <div>
+        <EditModal isEditable={isEditable} editItem={editItem} />
+        <DragDropContext onDragEnd={this.onDragEnd}>
+          { lists.map((list, index) => (
+            <ListWrapper key={list.id} >
+              <ContentCard>
+                <Droppable droppableId={`droppableCard-${list.id}`}>
+                  {(provided, snapshot) => (
+                    <div ref={provided.innerRef} style={this.getListStyle()}>
+                      { list.items.map((item, itemIndex) => (
+                        <Draggable key={item.id} draggableId={item.id} index={itemIndex}>
+                          {(provided, snapshot) => (
+                            <div
+                              ref={provided.innerRef} {...provided.draggableProps} {...provided.dragHandleProps}
+                              style={this.getItemStyle(snapshot.isDragging, provided.draggableProps.style)}
+                            >
+                              {item.content}
+                              <SubContents>
+                                <Deadend>
+                                  <img src='/times.svg' />
+                                  <span>5/6 13:00まで</span>
+                                </Deadend>
+                                <EditButton onClick={(e,id) => {this.onClickEdit(e,item.id)}}>編集する</EditButton>
+                              </SubContents>
+                            </div>
+                          )}
+                        </Draggable>
+                      ))}
+                      {provided.placeholder}
+                    </div>
+                  )}
+                </Droppable>
+              </ContentCard>
+              <AddCard listId={list.id} />
+            </ListWrapper>
+          ))}
+        </DragDropContext>
+      </div>
     )
   }
 }
 
 export default connect(((tasks) => (tasks: Tasks)), {
-  dispatchSortCard
+  dispatchSortCard,
+  dispatchEditCard,
+  dispatchSetEditCard
 })(Card)
 
 const ContentCard = styled.div`

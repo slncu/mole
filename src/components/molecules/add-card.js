@@ -4,7 +4,7 @@ import { connect } from 'react-redux'
 import type { Dispatch } from 'redux'
 import styled from 'styled-components'
 import { AddButton } from '../atoms/button'
-import { dispatchAddCard, incrementCardAmount } from '../../redux/modules/tasks'
+import { dispatchAddCard } from '../../redux/modules/tasks'
 import Const from '../../const'
 const { Color } = Const
 
@@ -14,13 +14,14 @@ type Props = {
 }
 
 function AddCard(props: Props) {
-  function onClick(e) {
+  function onClick() {
     props.dispatchAddCard(props.listId)
+
   }
 
   return (
     <Wrapper>
-      <AddButton onClick={(e) => { onClick(e) }}>
+      <AddButton onClick={() => { onClick() }}>
         カードを追加する
       </AddButton>
     </Wrapper>
