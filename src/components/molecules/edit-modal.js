@@ -4,7 +4,8 @@ import React, { Component } from 'react'
 import styled from 'styled-components'
 import { connect } from 'react-redux'
 import Modal from 'react-modal'
-import { dispatchEditCard } from '../../redux/modules/tasks'
+import { dispatchEditCard,
+         dispatchUpdateEditCard } from '../../redux/modules/tasks'
 
 type Item = {
   id: number,
@@ -14,7 +15,8 @@ type Item = {
 type Props = {
   editItem: Item,
   isEditable: boolean,
-  dispatchEditCard: boolean => void
+  dispatchEditCard: boolean => void,
+  dispatchUpdateEditCard: Item => void
 }
 
 const customStyles = {
@@ -47,6 +49,7 @@ class EditModal extends Component<Props> {
 
   onUpdateItem (obj: Item) {
     this.props.dispatchEditCard(false)
+    this.props.dispatchUpdateEditCard(obj)
   }
 
   getEditItem () {
@@ -80,7 +83,8 @@ class EditModal extends Component<Props> {
 }
 
 export default connect(null, {
-  dispatchEditCard
+  dispatchEditCard,
+  dispatchUpdateEditCard
 })(EditModal)
 
 const WrapperModal = styled.div`
