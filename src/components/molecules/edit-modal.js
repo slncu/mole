@@ -4,12 +4,15 @@ import React, { Component } from 'react'
 import styled from 'styled-components'
 import { connect } from 'react-redux'
 import Modal from 'react-modal'
+import Calendar from './calendar'
 import { dispatchEditCard,
          dispatchUpdateEditCard } from '../../redux/modules/tasks'
 
 type Item = {
   id: number,
-  content: string
+  content: string,
+  startTime: string,
+  endTime: string
 }
 
 type Props = {
@@ -53,13 +56,16 @@ class EditModal extends Component<Props> {
   }
 
   getEditItem () {
-    const { id, content } = this.props.editItem
-    const obj = { id, content }
+    const { id, content, startTime, endTime } = this.props.editItem
+    const obj = { id, content, startTime, endTime }
 
     return (
       <WrapperModal>
+        <Calendar />
         <input type='hidden' name='id' defaultValue={id} />
         <input onChange={e => (obj.content = e.target.value)} type='text' name='content' defaultValue={content} />
+        <input onChange={e => (obj.startTime = e.target.value)} type='text' name='startTime' defaultValue={startTime} />
+        <input onChange={e => (obj.endTime = e.target.value)} type='text' name='endTime' defaultValue={endTime} />
         <button onClick={this.onClose}>閉じる</button>
         <button onClick={() => { this.onUpdateItem(obj) }}>更新</button>
       </WrapperModal>
@@ -88,6 +94,6 @@ export default connect(null, {
 })(EditModal)
 
 const WrapperModal = styled.div`
-  width: 350px;
-  height: 350px;
+  width: 500px;
+  height: 500px;
 `

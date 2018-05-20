@@ -17,7 +17,9 @@ const { Color, Font } = Const
 
 type Item = {
   id: number,
-  content: string
+  content: string,
+  startTime: string,
+  endTime: string
 }
 
 type List = {
@@ -137,8 +139,8 @@ class Card extends Component<Props> {
                               {item.content}
                               <SubContents>
                                 <Deadend>
-                                  <img src='/times.svg' />
-                                  <span>5/6 13:00まで</span>
+                                  { item.endTime && <img src='/times.svg' />}
+                                  { item.endTime && <span>{item.endTime}まで</span>}
                                 </Deadend>
                                 <EditButton onClick={(e,id) => {this.onClickEdit(e,item.id)}}>編集する</EditButton>
                               </SubContents>

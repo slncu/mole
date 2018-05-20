@@ -5,7 +5,9 @@ import _ from 'lodash'
 
 type Item = {
   id: number,
-  content: string
+  content: string,
+  startTime: string,
+  endTime: string
 }
 
 type List = {
@@ -25,12 +27,16 @@ const initialState = {
     id: 1,
     items: [{
       id: 1,
-      content: ''
+      content: '',
+      startTime: '',
+      endTime: ''
     }]
   }],
   editItem: {
     id: 1,
-    content: ''
+    content: '',
+    startTime: '',
+    endTime: ''
   },
   isEditable: false,
   cardAmount: 1
@@ -128,7 +134,7 @@ export const dispatchAddCard = (listId: number) => (dispatch: Dispatch, getState
   let lists = []
   const newList = _.cloneDeep(state.tasks.lists).map(list => {
     if (listId === list.id) {
-      list.items.push({id: state.tasks.cardAmount, content:''})
+      list.items.push({id: state.tasks.cardAmount, content:'', startTime: '', endTime: ''})
     }
     return list
   })
