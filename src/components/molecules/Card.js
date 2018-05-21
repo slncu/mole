@@ -12,6 +12,7 @@ import { dispatchSortCard,
          dispatchEditCard,
          dispatchSetEditCard } from '../../redux/modules/tasks'
 import type { Tasks } from '../../redux/modules/tasks'
+import type { Ui } from '../../redux/modules/ui'
 import type { Dispatch } from 'redux'
 const { Color, Font } = Const
 
@@ -29,6 +30,7 @@ type List = {
 
 type Props = {
   tasks: Tasks,
+  ui: Ui,
   dispatchSortCard: Array<List> => void,
   dispatchEditCard: boolean => void,
   dispatchSetEditCard: number => void
@@ -118,10 +120,11 @@ class Card extends Component<Props> {
 
   render () {
     const { lists, editItem, isEditable } = this.props.tasks
+    const { isOpenCalendar, isOpenModal } = this.props.ui
 
     return (
       <div>
-        <EditModal isEditable={isEditable} editItem={editItem} />
+        <EditModal isEditable={isEditable} editItem={editItem} isOpenCalendar={isOpenCalendar}/>
         <DragDropContext onDragEnd={this.onDragEnd}>
           { lists.map((list, index) => (
             <ListWrapper key={list.id} >
@@ -162,7 +165,14 @@ class Card extends Component<Props> {
   }
 }
 
-export default connect(((tasks) => (tasks: Tasks)), {
+function mapStateToProps(state) {
+  return {
+    tasks: state.tasks,
+    ui: state.ui
+  }
+}
+
+export default connect(mapStateToProps, {
   dispatchSortCard,
   dispatchEditCard,
   dispatchSetEditCard

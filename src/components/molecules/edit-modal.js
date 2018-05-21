@@ -7,6 +7,7 @@ import Modal from 'react-modal'
 import Calendar from './calendar'
 import { dispatchEditCard,
          dispatchUpdateEditCard } from '../../redux/modules/tasks'
+import { dispatchIsOpenCalendar, isOpenCalendar } from '../../redux/modules/ui'
 
 type Item = {
   id: number,
@@ -18,8 +19,10 @@ type Item = {
 type Props = {
   editItem: Item,
   isEditable: boolean,
+  isOpenCalendar: boolean,
   dispatchEditCard: boolean => void,
-  dispatchUpdateEditCard: Item => void
+  dispatchUpdateEditCard: Item => void,
+  dispatchIsOpenCalendar: boolean => void
 }
 
 const customStyles = {
@@ -55,17 +58,23 @@ class EditModal extends Component<Props> {
     this.props.dispatchUpdateEditCard(obj)
   }
 
+  onSetDate(e) {
+    console.log(e)
+    this.props.dispatchIsOpenCalendar(true)
+  }
+
   getEditItem () {
     const { id, content, startTime, endTime } = this.props.editItem
     const obj = { id, content, startTime, endTime }
+    console.log(this)
 
     return (
       <WrapperModal>
-        <Calendar />
+        { this.props.isOpenCalendar && <Calendar dispatchIsOpenCalendar={this.props.dispatchIsOpenCalendar} />}
         <input type='hidden' name='id' defaultValue={id} />
         <input onChange={e => (obj.content = e.target.value)} type='text' name='content' defaultValue={content} />
-        <input onChange={e => (obj.startTime = e.target.value)} type='text' name='startTime' defaultValue={startTime} />
-        <input onChange={e => (obj.endTime = e.target.value)} type='text' name='endTime' defaultValue={endTime} />
+        <p onClick={ (e) => { this.onSetDate(e) } } time='start'>Start</p>
+        <p onClick={ (e) => { this.onSetDate(e) } } time='end'>End</p>
         <button onClick={this.onClose}>閉じる</button>
         <button onClick={() => { this.onUpdateItem(obj) }}>更新</button>
       </WrapperModal>
@@ -73,6 +82,7 @@ class EditModal extends Component<Props> {
   }
 
   render () {
+    console.log(this)
     const { isEditable } = this.props
     return (
       <div>
@@ -90,7 +100,8 @@ class EditModal extends Component<Props> {
 
 export default connect(null, {
   dispatchEditCard,
-  dispatchUpdateEditCard
+  dispatchUpdateEditCard,
+  dispatchIsOpenCalendar
 })(EditModal)
 
 const WrapperModal = styled.div`

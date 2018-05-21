@@ -27,17 +27,28 @@ type IsOpenCalendar = {
   payload: boolean
 }
 
+type Actions = IsOpenCalendar;
+
 /**
  * The reducer
  */
 
-export default (state: Ui = initialState, action) => {
+export default (state: Ui = initialState, action: Actions) => {
   switch (action.type) {
+    case IS_OPEN_CALENDAR:
+      return { ...state, isOpenCalendar: action.payload }
     default:
       return state;
   }
 }
 
-export const dispatchIsOpenCalendar = () => (dispatch: Dispatch) => {
-  
+export const isOpenCalendar = (isOpen:boolean):IsOpenCalendar  => {
+  return {
+    type: 'ui/IS_OPEN_CALENDAR',
+    payload: isOpen
+  }
+}
+
+export const dispatchIsOpenCalendar = (isOpen:boolean)=> (dispatch:Dispatch) => {
+  dispatch(isOpenCalendar(isOpen))
 }

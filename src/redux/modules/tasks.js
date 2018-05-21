@@ -49,6 +49,8 @@ const SORT_CARD = 'tasks/SORT_CARD'
 const IS_EDITABLE = 'tasks/IS_EDITABLE'
 const SET_EDIT_CARD = 'tasks/SET_EDIT_CARD'
 const UPDATE_EDIT_CARD = 'tasks/UPDATE_EDIT_CARD'
+const SET_START_TIME = 'tasks/SET_START_TIME'
+const SET_END_TIME = 'tasks/SET_END_TIME'
 
 type IncrementCardAmount = { type: 'tasks/INCREMENT_CARD_AMOUNT' }
 
@@ -79,13 +81,25 @@ type UpdateEditCard = {
   payload: Array<List>
 }
 
+type SetStartTime = {
+  type: 'tasks/SET_START_TIME',
+  payload: string
+}
+
+type SetEndTime = {
+  type: 'tasks/SET_END_TIME',
+  payload: string
+}
+
 type Actions = IncrementCardAmount |
                DecrementCardAmount |
                AddCard |
                SetEditCard |
                SortCard |
                IsEditable |
-               UpdateEditCard;
+               UpdateEditCard |
+               SetStartTime |
+               SetEndTime;
 
 /**
  * The reducer
@@ -107,6 +121,10 @@ export default (state: Tasks = initialState, action: Actions) => {
       return Object.assign({}, state, { lists: action.payload})
     case IS_EDITABLE:
       return { ...state, isEditable: action.payload };
+    case SET_START_TIME: 
+      return state
+    case SET_END_TIME: 
+      return state
     default:
       return state;
   }
