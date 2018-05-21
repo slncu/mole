@@ -2,6 +2,7 @@
 import type { Dispatch } from 'redux'
 import type { State } from '../'
 import _ from 'lodash'
+import moment from 'moment'
 
 type Item = {
   id: number,
@@ -83,12 +84,12 @@ type UpdateEditCard = {
 
 type SetStartTime = {
   type: 'tasks/SET_START_TIME',
-  payload: string
+  payload: Item
 }
 
 type SetEndTime = {
   type: 'tasks/SET_END_TIME',
-  payload: string
+  payload: Item
 }
 
 type Actions = IncrementCardAmount |
@@ -122,9 +123,9 @@ export default (state: Tasks = initialState, action: Actions) => {
     case IS_EDITABLE:
       return { ...state, isEditable: action.payload };
     case SET_START_TIME: 
-      return state
+      return Object.assign({}, state, { editItem: action.payload});
     case SET_END_TIME: 
-      return state
+      return Object.assign({}, state, { editItem: action.payload});
     default:
       return state;
   }
@@ -223,4 +224,31 @@ export const dispatchUpdateEditCard = (item: Item) => (dispatch: Dispatch, getSt
     })}
   })
   dispatch(updateEditCard(lists))
+}
+
+export const setStartTime = (obj: Item): SetStartTime => {
+  return {
+    type: 'tasks/SET_START_TIME',
+    payload: obj
+  }
+}
+
+export const setEndTime = (obj: Item): SetEndTime => {
+  return {
+    type: 'tasks/SET_END_TIME',
+    payload: obj
+  }
+}
+
+export const dispatchSetDeadEnd = (time: string, type: string) => (dispatch: Dispatch, getState: () => State) => {
+  console.log(time, type)
+  const state = getState()
+  const obj = _.cloneDeep(state.tasks.editItem)
+  if(type === 'start') {
+    obj.startTime = moment(time).format('YYYY/MM/DD')
+    dispatch(setStartTime(obj))
+  } else {
+    obj.endTime = moment(time).format('YYYY/MM/DD')
+    dispatch(setEndTime(obj))
+  }
 }

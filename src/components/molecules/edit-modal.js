@@ -6,8 +6,10 @@ import { connect } from 'react-redux'
 import Modal from 'react-modal'
 import Calendar from './calendar'
 import { dispatchEditCard,
-         dispatchUpdateEditCard } from '../../redux/modules/tasks'
-import { dispatchIsOpenCalendar, isOpenCalendar } from '../../redux/modules/ui'
+         dispatchUpdateEditCard,
+         dispatchSetDeadEnd } from '../../redux/modules/tasks'
+import { dispatchIsOpenCalendar, 
+         isOpenCalendar } from '../../redux/modules/ui'
 
 type Item = {
   id: number,
@@ -22,7 +24,12 @@ type Props = {
   isOpenCalendar: boolean,
   dispatchEditCard: boolean => void,
   dispatchUpdateEditCard: Item => void,
-  dispatchIsOpenCalendar: boolean => void
+  dispatchIsOpenCalendar: boolean => void,
+  dispatchSetDeadEnd: string => void
+}
+
+type States = {
+  typeOfDate: string
 }
 
 const customStyles = {
@@ -41,12 +48,14 @@ Modal.setAppElement('#root')
 class EditModal extends Component<Props> {
   onClose: Function
   getEditItem: Function
+  state: States
 
   constructor () {
     super()
 
     this.onClose = this.onClose.bind(this)
     this.getEditItem = this.getEditItem.bind(this)
+    this.state = { typeOfDate: '' }
   }
 
   onClose () {
@@ -58,23 +67,22 @@ class EditModal extends Component<Props> {
     this.props.dispatchUpdateEditCard(obj)
   }
 
-  onSetDate(e) {
-    console.log(e)
+  onSetDate(e, type) {
+    this.setState({ typeOfDate: type})
     this.props.dispatchIsOpenCalendar(true)
   }
 
   getEditItem () {
     const { id, content, startTime, endTime } = this.props.editItem
-    const obj = { id, content, startTime, endTime }
-    console.log(this)
+    const obj = { id, content, startTime: this.props.editItem.startTime, endTime: this.props.editItem.endTime }
 
     return (
       <WrapperModal>
-        { this.props.isOpenCalendar && <Calendar dispatchIsOpenCalendar={this.props.dispatchIsOpenCalendar} />}
+        { this.props.isOpenCalendar && <Calendar typeOfDate={this.state.typeOfDate} dispatchIsOpenCalendar={this.props.dispatchIsOpenCalendar} dispatchSetDeadEnd={this.props.dispatchSetDeadEnd} />}
         <input type='hidden' name='id' defaultValue={id} />
         <input onChange={e => (obj.content = e.target.value)} type='text' name='content' defaultValue={content} />
-        <p onClick={ (e) => { this.onSetDate(e) } } time='start'>Start</p>
-        <p onClick={ (e) => { this.onSetDate(e) } } time='end'>End</p>
+        <p onClick={ (e) => { this.onSetDate(e, 'start') } }>{startTime || 'start'}</p>
+        <p onClick={ (e) => { this.onSetDate(e, 'end') } }>{endTime || 'end'}</p>
         <button onClick={this.onClose}>閉じる</button>
         <button onClick={() => { this.onUpdateItem(obj) }}>更新</button>
       </WrapperModal>
@@ -82,7 +90,6 @@ class EditModal extends Component<Props> {
   }
 
   render () {
-    console.log(this)
     const { isEditable } = this.props
     return (
       <div>
@@ -101,7 +108,8 @@ class EditModal extends Component<Props> {
 export default connect(null, {
   dispatchEditCard,
   dispatchUpdateEditCard,
-  dispatchIsOpenCalendar
+  dispatchIsOpenCalendar,
+  dispatchSetDeadEnd
 })(EditModal)
 
 const WrapperModal = styled.div`

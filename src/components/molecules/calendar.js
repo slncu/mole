@@ -9,7 +9,12 @@ const lastWeek = new Date(today.getFullYear(), today.getMonth(), today.getDate()
 console.log(today, lastWeek)
 
 export default function Calendar(props) {
-  console.log(props)
+  function onSelectDate(date) {
+    console.log(props)
+    props.dispatchIsOpenCalendar(false)
+    props.dispatchSetDeadEnd(date, props.typeOfDate)
+  }
+
   return (
   <Wrapper>
     <InfiniteCalendar
@@ -17,7 +22,7 @@ export default function Calendar(props) {
       height={350}
       selected={today}
       minDate={lastWeek}
-      onSelect={ (date)=> {props.dispatchIsOpenCalendar(false)} }
+      onSelect={ (date)=> { onSelectDate(date) } }
     />
   </Wrapper>
   )
