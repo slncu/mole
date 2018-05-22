@@ -8,6 +8,7 @@
     "react": "^16.3.2",
     "react-addons-css-transition-group": "^15.6.2",
     "react-beautiful-dnd": "^7.1.0",
+    "react-click-outside": "tj/react-click-outside",
     "react-dom": "^16.3.2",
     "react-infinite-calendar": "^2.3.1",
     "react-modal": "^3.4.2",
