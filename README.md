@@ -1,3 +1,5 @@
+<img src="./public/mole.png" alt="mole" title="mole" width="150px">
+
 ## mole
 > The simple task manager
 
