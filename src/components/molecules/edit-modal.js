@@ -28,7 +28,7 @@ type Props = {
   dispatchSetDeadEnd: string => void
 }
 
-type States = {
+type State = {
   typeOfDate: string
 }
 
@@ -45,17 +45,21 @@ const customStyles = {
 
 Modal.setAppElement('#root')
 
-class EditModal extends Component<Props> {
+class EditModal extends Component<Props, State> {
   onClose: Function
   getEditItem: Function
-  state: States
+  state: State
 
   constructor () {
     super()
 
     this.onClose = this.onClose.bind(this)
     this.getEditItem = this.getEditItem.bind(this)
-    this.state = { typeOfDate: '' }
+    this.state = this.getInitialState()
+  }
+
+  getInitialState() {
+    return { typeOfDate: ''}
   }
 
   onClose () {
@@ -68,7 +72,7 @@ class EditModal extends Component<Props> {
   }
 
   onSetDate(e, type) {
-    this.setState({ typeOfDate: type})
+    this.setState({ typeOfDate: type })
     this.props.dispatchIsOpenCalendar(true)
   }
 
