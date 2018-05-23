@@ -1,16 +1,25 @@
 import React, { Component } from 'react'
 import styled from 'styled-components'
 import Card from '../molecules/Card'
+import Header from '../organisms/Header'
 
 export default class TaskListPage extends Component {
   render () {
     return (
-      <Contents>
-        <Card />
-      </Contents>
+      <Page>
+        <Header />
+        <Contents>
+          <Card />
+        </Contents>
+      </Page>
     )
   }
 }
+
+const Page = styled.div`
+  width: 100%;
+  height: 100%;
+`
 
 const Contents = styled.div`
   width: 100%;
