@@ -6,7 +6,7 @@ import logo from '../../mole.png'
 export default () => {
   return (
     <Wrapper>
-      header
+      <img src={logo} />
     </Wrapper>
   )
 }

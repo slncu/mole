@@ -9,11 +9,10 @@ import EditModal from './edit-modal'
 import { EditButton } from '../atoms/button'
 import Const from '../../const'
 import { dispatchSortCard,
-         dispatchEditCard,
-         dispatchSetEditCard } from '../../redux/modules/tasks'
+  dispatchEditCard,
+  dispatchSetEditCard } from '../../redux/modules/tasks'
 import type { Tasks } from '../../redux/modules/tasks'
 import type { Ui } from '../../redux/modules/ui'
-import type { Dispatch } from 'redux'
 const { Color, Font } = Const
 
 type Item = {
@@ -55,7 +54,7 @@ class Card extends Component<Props> {
     this.onClickEdit = this.onClickEdit.bind(this)
   }
 
-  getItemStyle(isDragging: boolean, draggableStyle: Object) {
+  getItemStyle (isDragging: boolean, draggableStyle: Object) {
     return {
       position: 'relative',
       userSelect: 'none',
@@ -107,7 +106,7 @@ class Card extends Component<Props> {
   onDragEnd (result) {
     if (!result.destination) return
     const lists = Array.from(this.getTaskInfo())
-    this.onMoveListToList(lists,result)
+    this.onMoveListToList(lists, result)
   }
 
   /**
@@ -120,11 +119,11 @@ class Card extends Component<Props> {
 
   render () {
     const { lists, editItem, isEditable } = this.props.tasks
-    const { isOpenCalendar, isOpenModal } = this.props.ui
+    const { isOpenCalendar } = this.props.ui
 
     return (
       <div>
-        <EditModal isEditable={isEditable} editItem={editItem} isOpenCalendar={isOpenCalendar}/>
+        <EditModal isEditable={isEditable} editItem={editItem} isOpenCalendar={isOpenCalendar} />
         <DragDropContext onDragEnd={this.onDragEnd}>
           { lists.map((list, index) => (
             <ListWrapper key={list.id} >
@@ -145,7 +144,7 @@ class Card extends Component<Props> {
                                   { item.endTime && <img src='/times.svg' />}
                                   { item.endTime && <span>{item.endTime}まで</span>}
                                 </Deadend>
-                                <EditButton onClick={(e,id) => {this.onClickEdit(e,item.id)}}>編集する</EditButton>
+                                <EditButton onClick={(e, id) => { this.onClickEdit(e, item.id) }}>編集する</EditButton>
                               </SubContents>
                             </div>
                           )}
@@ -165,7 +164,7 @@ class Card extends Component<Props> {
   }
 }
 
-function mapStateToProps(state) {
+function mapStateToProps (state) {
   return {
     tasks: state.tasks,
     ui: state.ui
