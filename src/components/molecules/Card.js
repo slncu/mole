@@ -60,9 +60,9 @@ class Card extends Component<Props> {
       position: 'relative',
       userSelect: 'none',
       padding: `${this.grid * 2}px`,
-      margin: `0 0 ${this.grid}px`,
+      margin: `0 0 ${this.grid * 1.6}px`,
       background: `${Color.WHITE}`,
-      border: `${isDragging ? '2px solid ' + Color.THICK_GREEN : '1px solid ' + Color.GRAY}`,
+      border: `${isDragging ? '2px solid ' + Color.THICK_GREEN : '1px solid ' + Color.THICK_WHITE}`,
       borderRadius: '4px',
       boxShadow: '1px 3px 5px rgba(0, 0, 0, .2)',
       width: '100%',
@@ -188,9 +188,11 @@ const ContentCard = styled.div`
 const ListWrapper = styled.div`
   display: flex;
   flex-direction: column;
-  width: 368px;
+  width: 376px;
   float: left;
   height: 100%;
+  box-shadow: 1px 3px 5px ${Color.GRAY_ALPHA20};
+  border-radius: 4px;
 `
 
 const SubContents = styled.div`
