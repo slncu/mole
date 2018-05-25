@@ -1,9 +1,5 @@
 // @flow
-
 import type { Dispatch } from 'redux'
-import type { State } from '../'
-import _ from 'lodash'
-
 export type Ui = {
   isOpenModal: boolean,
   isOpenCalendar: boolean
@@ -27,7 +23,8 @@ type IsOpenCalendar = {
   payload: boolean
 }
 
-type Actions = IsOpenCalendar;
+type Actions = IsOpenCalendar |
+               IsOpenModal;
 
 /**
  * The reducer
@@ -37,18 +34,20 @@ export default (state: Ui = initialState, action: Actions) => {
   switch (action.type) {
     case IS_OPEN_CALENDAR:
       return { ...state, isOpenCalendar: action.payload }
+    case IS_OPEN_MODAL:
+      return state
     default:
-      return state;
+      return state
   }
 }
 
-export const isOpenCalendar = (isOpen:boolean):IsOpenCalendar  => {
+export const isOpenCalendar = (isOpen:boolean):IsOpenCalendar => {
   return {
     type: 'ui/IS_OPEN_CALENDAR',
     payload: isOpen
   }
 }
 
-export const dispatchIsOpenCalendar = (isOpen:boolean)=> (dispatch:Dispatch) => {
+export const dispatchIsOpenCalendar = (isOpen:boolean) => (dispatch:Dispatch) => {
   dispatch(isOpenCalendar(isOpen))
 }

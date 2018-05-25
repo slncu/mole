@@ -6,10 +6,9 @@ import { connect } from 'react-redux'
 import Modal from 'react-modal'
 import Calendar from './calendar'
 import { dispatchEditCard,
-         dispatchUpdateEditCard,
-         dispatchSetDeadEnd } from '../../redux/modules/tasks'
-import { dispatchIsOpenCalendar, 
-         isOpenCalendar } from '../../redux/modules/ui'
+  dispatchUpdateEditCard,
+  dispatchSetDeadEnd } from '../../redux/modules/tasks'
+import { dispatchIsOpenCalendar } from '../../redux/modules/ui'
 
 type Item = {
   id: number,
@@ -58,8 +57,8 @@ class EditModal extends Component<Props, State> {
     this.state = this.getInitialState()
   }
 
-  getInitialState() {
-    return { typeOfDate: ''}
+  getInitialState () {
+    return { typeOfDate: '' }
   }
 
   onClose () {
@@ -71,7 +70,7 @@ class EditModal extends Component<Props, State> {
     this.props.dispatchUpdateEditCard(obj)
   }
 
-  onSetDate(e, type) {
+  onSetDate (e, type) {
     this.setState({ typeOfDate: type })
     this.props.dispatchIsOpenCalendar(true)
   }
@@ -85,8 +84,8 @@ class EditModal extends Component<Props, State> {
         { this.props.isOpenCalendar && <Calendar typeOfDate={this.state.typeOfDate} dispatchIsOpenCalendar={this.props.dispatchIsOpenCalendar} dispatchSetDeadEnd={this.props.dispatchSetDeadEnd} />}
         <input type='hidden' name='id' defaultValue={id} />
         <input onChange={e => (obj.content = e.target.value)} type='text' name='content' defaultValue={content} />
-        <p onClick={ (e) => { this.onSetDate(e, 'start') } }>{startTime || 'start'}</p>
-        <p onClick={ (e) => { this.onSetDate(e, 'end') } }>{endTime || 'end'}</p>
+        <p onClick={(e) => { this.onSetDate(e, 'start') }}>{startTime || 'start'}</p>
+        <p onClick={(e) => { this.onSetDate(e, 'end') }}>{endTime || 'end'}</p>
         <button onClick={this.onClose}>閉じる</button>
         <button onClick={() => { this.onUpdateItem(obj) }}>更新</button>
       </WrapperModal>

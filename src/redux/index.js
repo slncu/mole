@@ -8,7 +8,7 @@ import reducer from './reducer'
 const middleware = [thunk]
 
 if (process.env.NODE_ENV !== 'production') {
-  middleware.push(logger);
+  middleware.push(logger)
 }
 
 const persistConfig = {

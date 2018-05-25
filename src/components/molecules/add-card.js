@@ -1,7 +1,6 @@
 // @flow
-import React, { Component } from 'react'
+import React from 'react'
 import { connect } from 'react-redux'
-import type { Dispatch } from 'redux'
 import styled from 'styled-components'
 import { AddButton } from '../atoms/button'
 import { dispatchAddCard } from '../../redux/modules/tasks'
@@ -13,10 +12,9 @@ type Props = {
   dispatchAddCard: (listId: number) => void
 }
 
-function AddCard(props: Props) {
-  function onClick() {
+function AddCard (props: Props) {
+  function onClick () {
     props.dispatchAddCard(props.listId)
-
   }
 
   return (

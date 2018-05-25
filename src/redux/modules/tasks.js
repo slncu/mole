@@ -113,21 +113,21 @@ export default (state: Tasks = initialState, action: Actions) => {
     case DECREMENT_CARD_AMOUNT:
       return Object.assign({}, state, { cardAmount: state.cardAmount - 1 })
     case ADD_CARD:
-      return Object.assign({}, state, { lists: action.payload})
+      return Object.assign({}, state, { lists: action.payload })
     case SET_EDIT_CARD:
-      return Object.assign({}, state, { editItem: action.payload});
+      return Object.assign({}, state, { editItem: action.payload })
     case SORT_CARD:
-      return Object.assign({}, state, { lists: action.payload})
+      return Object.assign({}, state, { lists: action.payload })
     case UPDATE_EDIT_CARD:
-      return Object.assign({}, state, { lists: action.payload})
+      return Object.assign({}, state, { lists: action.payload })
     case IS_EDITABLE:
-      return { ...state, isEditable: action.payload };
-    case SET_START_TIME: 
-      return Object.assign({}, state, { editItem: action.payload});
-    case SET_END_TIME: 
-      return Object.assign({}, state, { editItem: action.payload});
+      return { ...state, isEditable: action.payload }
+    case SET_START_TIME:
+      return Object.assign({}, state, { editItem: action.payload })
+    case SET_END_TIME:
+      return Object.assign({}, state, { editItem: action.payload })
     default:
-      return state;
+      return state
   }
 }
 
@@ -150,17 +150,16 @@ export const dispatchAddCard = (listId: number) => (dispatch: Dispatch, getState
   dispatch(incrementCardAmount())
 
   const state = getState()
-  let lists = []
   const newList = _.cloneDeep(state.tasks.lists).map(list => {
     if (listId === list.id) {
-      list.items.push({id: state.tasks.cardAmount, content:'', startTime: '', endTime: ''})
+      list.items.push({id: state.tasks.cardAmount, content: '', startTime: '', endTime: ''})
     }
     return list
   })
   dispatch(addCard(newList))
 }
 
-export const sortCard = (list: Array<List>) =>{
+export const sortCard = (list: Array<List>) => {
   return {
     type: 'tasks/SORT_CARD',
     payload: list
@@ -188,13 +187,13 @@ export const setEditCard = (item: Item): SetEditCard => {
 export const dispatchSetEditCard = (id: number) => (dispatch: Dispatch, getState: () => State) => {
   console.log(id)
   const state = getState()
-  let editItem = [];
-  const clone = _.cloneDeep(state.tasks.lists).forEach(list => (list.items.map(item => {
-    if(item.id === id) {
+  let editItem = []
+  _.cloneDeep(state.tasks.lists).forEach(list => (list.items.map(item => {
+    if (item.id === id) {
       editItem.push(item)
     }
   })
-))
+  ))
 
   dispatch(setEditCard(editItem[0]))
 }
@@ -217,11 +216,11 @@ export const dispatchUpdateEditCard = (item: Item) => (dispatch: Dispatch, getSt
     return {
       id: list.id,
       items: list.items.map(i => {
-      if (i.id === item.id) {
-        return item
-      }
-      return i
-    })}
+        if (i.id === item.id) {
+          return item
+        }
+        return i
+      })}
   })
   dispatch(updateEditCard(lists))
 }
@@ -244,7 +243,7 @@ export const dispatchSetDeadEnd = (time: string, type: string) => (dispatch: Dis
   console.log(time, type)
   const state = getState()
   const obj = _.cloneDeep(state.tasks.editItem)
-  if(type === 'start') {
+  if (type === 'start') {
     obj.startTime = moment(time).format('YYYY/MM/DD')
     dispatch(setStartTime(obj))
   } else {
