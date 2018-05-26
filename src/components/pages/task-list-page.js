@@ -1,20 +1,18 @@
+// @flow
+
 import React, { Component } from 'react'
 import styled from 'styled-components'
-import Card from '../molecules/Card'
+import CardList from '../organisms/Card-list'
 import Header from '../organisms/Header'
 
-export default class TaskListPage extends Component {
-  render () {
-    return (
-      <Page>
-        <Header />
-        <Contents>
-          <Card />
-        </Contents>
-      </Page>
-    )
-  }
-}
+export default () => (
+  <Page>
+    <Header />
+    <Contents>
+      <CardList />
+    </Contents>
+  </Page>
+)
 
 const Page = styled.div`
   width: 100%;
@@ -23,6 +21,6 @@ const Page = styled.div`
 
 const Contents = styled.div`
   width: 100%;
-  height: 100%;
+  height: 85%;
   padding: 0 36px;
 `

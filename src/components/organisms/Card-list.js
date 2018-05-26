@@ -1,11 +1,10 @@
 // @flow
-
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import styled from 'styled-components'
 import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd'
-import AddCard from './add-card'
-import EditModal from './edit-modal'
+import AddCard from '../molecules/add-card'
+import EditModal from '../molecules/edit-modal'
 import { EditButton } from '../atoms/button'
 import Const from '../../const'
 import { dispatchSortCard,
@@ -39,7 +38,7 @@ const getArrayMap = str => {
   return parseInt(str.slice(-1), 10) - 1
 }
 
-class Card extends Component<Props> {
+class CardList extends Component<Props> {
   grid: number;
   getItemStyle: Function;
   onDragEnd: Function;
@@ -122,7 +121,7 @@ class Card extends Component<Props> {
     const { isOpenCalendar } = this.props.ui
 
     return (
-      <div>
+      <Wrapper>
         <EditModal isEditable={isEditable} editItem={editItem} isOpenCalendar={isOpenCalendar} />
         <DragDropContext onDragEnd={this.onDragEnd}>
           { lists.map((list, index) => (
@@ -138,7 +137,7 @@ class Card extends Component<Props> {
                               ref={provided.innerRef} {...provided.draggableProps} {...provided.dragHandleProps}
                               style={this.getItemStyle(snapshot.isDragging, provided.draggableProps.style)}
                             >
-                              {item.content}
+                              {item.content || '新しいカード' }
                               <SubContents>
                                 <Deadend>
                                   { item.endTime && <img src='/times.svg' />}
@@ -159,7 +158,7 @@ class Card extends Component<Props> {
             </ListWrapper>
           ))}
         </DragDropContext>
-      </div>
+      </Wrapper>
     )
   }
 }
@@ -175,13 +174,17 @@ export default connect(mapStateToProps, {
   dispatchSortCard,
   dispatchEditCard,
   dispatchSetEditCard
-})(Card)
+})(CardList)
 
 const ContentCard = styled.div`
   width: 376px;
   min-height: 0;
   box-sizing: content-box;
   overflow: scroll;
+`
+
+const Wrapper = styled.div`
+  height: 100%;
 `
 
 const ListWrapper = styled.div`
@@ -192,6 +195,7 @@ const ListWrapper = styled.div`
   height: 100%;
   box-shadow: 1px 3px 5px ${Color.GRAY_ALPHA20};
   border-radius: 4px;
+  background: ${Color.GRAY};
 `
 
 const SubContents = styled.div`
