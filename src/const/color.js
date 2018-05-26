@@ -9,5 +9,5 @@ export default {
   RED: '#F00',
   GRAY: '#DDD',
   GRAY_ALPHA20: 'rgba(0, 0, 0, 0.2)',
-  WHITE_ALPHA10: 'rgba(255, 255, 255, 0.5)',
+  WHITE_ALPHA10: 'rgba(255, 255, 255, 0.5)'
 }
