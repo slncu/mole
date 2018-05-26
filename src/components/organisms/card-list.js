@@ -222,7 +222,7 @@ const ListWrapper = styled.div`
 const SubContents = styled.div`
   display: flex;
   justify-content: flex-end;
-  align-items: flex-end;
+  align-items: center;
   margin-top: 8px;
 `
 
