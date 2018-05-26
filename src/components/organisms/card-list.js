@@ -9,9 +9,12 @@ import { EditButton } from '../atoms/button'
 import Const from '../../const'
 import { dispatchSortCard,
   dispatchEditCard,
-  dispatchSetEditCard } from '../../redux/modules/tasks'
+  dispatchSetEditCard,
+  dispatchDeleteCard,
+  dispatchDeleteList } from '../../redux/modules/tasks'
 import type { Tasks } from '../../redux/modules/tasks'
 import type { Ui } from '../../redux/modules/ui'
+
 const { Color, Font } = Const
 
 type Item = {
@@ -29,9 +32,11 @@ type List = {
 type Props = {
   tasks: Tasks,
   ui: Ui,
-  dispatchSortCard: Array<List> => void,
-  dispatchEditCard: boolean => void,
-  dispatchSetEditCard: number => void
+  dispatchSortCard: (Array<List>) => void,
+  dispatchEditCard: (boolean) => void,
+  dispatchSetEditCard: (number) => void,
+  dispatchDeleteCard: (number, number) => void,
+  dispatchDeleteList: (number) => void
 }
 
 const getArrayMap = str => {
@@ -79,15 +84,11 @@ class CardList extends Component<Props> {
     }
   }
 
-  /**
-   * タスクカードの情報を取得する
-   */
   getTaskInfo () {
     const { lists } = this.props.tasks
     return lists.map(list => (list))
   }
 
-  // source, destination, droppableSource, droppableDestination
   onMoveListToList (ary, result) {
     const cloneAry = Array.from(ary)
     const { destination, source } = result
@@ -99,18 +100,12 @@ class CardList extends Component<Props> {
     this.props.dispatchSortCard(cloneAry)
   }
 
-  /**
-   * ドラッグ終了後の制御
-   */
   onDragEnd (result) {
     if (!result.destination) return
     const lists = Array.from(this.getTaskInfo())
     this.onMoveListToList(lists, result)
   }
 
-  /**
-   * 編集モードのon/off
-   */
   onClickEdit (e, id: number) {
     this.props.dispatchSetEditCard(id)
     this.props.dispatchEditCard(true)
@@ -119,13 +114,16 @@ class CardList extends Component<Props> {
   render () {
     const { lists, editItem, isEditable } = this.props.tasks
     const { isOpenCalendar } = this.props.ui
-
     return (
       <Wrapper>
         <EditModal isEditable={isEditable} editItem={editItem} isOpenCalendar={isOpenCalendar} />
         <DragDropContext onDragEnd={this.onDragEnd}>
           { lists.map((list, index) => (
-            <ListWrapper key={list.id} >
+            <ListWrapper key={list.id}>
+              <ListLabel>
+                <span>{list.name || `リスト${list.id}`}</span>
+                <img src='/ng.svg' alt='NG' onClick={(e, listId, itemId) => { this.props.dispatchDeleteList(list.id) }} width='20px' />
+              </ListLabel>
               <ContentCard>
                 <Droppable droppableId={`droppableCard-${list.id}`}>
                   {(provided, snapshot) => (
@@ -143,6 +141,7 @@ class CardList extends Component<Props> {
                                   { item.endTime && <img src='/times.svg' alt='時間' />}
                                   { item.endTime && <span>{item.endTime}まで</span>}
                                 </Deadend>
+                                <ImgWrapper onClick={(e, listId, itemId) => { this.props.dispatchDeleteCard(list.id, item.id) }}><img src='/dustbox.svg' alt='ゴミ箱' width='30px' /></ImgWrapper>
                                 <EditButton onClick={(e, id) => { this.onClickEdit(e, item.id) }}>編集する</EditButton>
                               </SubContents>
                             </div>
@@ -173,7 +172,9 @@ function mapStateToProps (state) {
 export default connect(mapStateToProps, {
   dispatchSortCard,
   dispatchEditCard,
-  dispatchSetEditCard
+  dispatchSetEditCard,
+  dispatchDeleteCard,
+  dispatchDeleteList
 })(CardList)
 
 const ContentCard = styled.div`
@@ -191,6 +192,22 @@ const Wrapper = styled.div`
   align-content:flex-start;
 `
 
+const ListLabel = styled.div`
+  display: flex;
+  padding: 8px;
+  align-items: center;
+  justify-content: space-between;
+
+  > span {
+    display: block;
+  }
+
+  > img {
+    display: block;
+    cursor: pointer;
+  }
+`
+
 const ListWrapper = styled.div`
   display: flex;
   flex-direction: column;
@@ -204,19 +221,33 @@ const ListWrapper = styled.div`
 
 const SubContents = styled.div`
   display: flex;
-  justify-content: space-between;
+  justify-content: flex-end;
   align-items: flex-end;
   margin-top: 8px;
+`
+
+const ImgWrapper = styled.div`
+  display: inline-block;
+  padding: 0 12px;
+  cursor: pointer;
+
+  img {
+    display: inline-block;
+    width: 20px;
+    height: 20px;
+    margin-right: .5em;
+    vertical-align: bottom;
+  }
 `
 
 /** TODO Fix to isDeadend props */
 const Deadend = styled.div`
   display: block;
-  padding: 8px;
   font-size: ${Font.SIZE.SMALL};
   font-weight: ${Font.WEIGHT.NORMAL};
   border-radius: 4px;
   background-color: ${props => props.isDeadend ? Color.RED : ''};
+  flex: 2;
 
   img {
     display: inline-block;

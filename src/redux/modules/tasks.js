@@ -21,8 +21,8 @@ export type Tasks = {
   lists: Array<List>,
   editItem: Item,
   isEditable: boolean,
-  cardAmount: number,
-  listAmount: number
+  cardId: number,
+  listId: number
 }
 
 const initialState = {
@@ -43,14 +43,12 @@ const initialState = {
     endTime: ''
   },
   isEditable: false,
-  cardAmount: 1,
-  listAmount: 1
+  cardId: 1,
+  listId: 1
 }
 
 const INCREMENT_CARD_AMOUNT = 'tasks/INCREMENT_CARD_AMOUNT'
-const DECREMENT_CARD_AMOUNT = 'tasks/DECREMENT_CARD_AMOUNT'
 const INCREMENT_LIST_AMOUNT = 'tasks/INCREMENT_LIST_AMOUNT'
-const DECREMENT_LIST_AMOUNT = 'tasks/DECREMENT_LIST_AMOUNT'
 const ADD_CARD = 'tasks/ADD_CARD'
 const SORT_CARD = 'tasks/SORT_CARD'
 const IS_EDITABLE = 'tasks/IS_EDITABLE'
@@ -59,14 +57,12 @@ const UPDATE_EDIT_CARD = 'tasks/UPDATE_EDIT_CARD'
 const SET_START_TIME = 'tasks/SET_START_TIME'
 const SET_END_TIME = 'tasks/SET_END_TIME'
 const ADD_LIST = 'tasks/ADD_LIST'
+const DELETE_CARD = 'tasks/DELETE_CARD'
+const DELETE_LIST = 'tasks/DELETE_LIST'
 
-type IncrementCardAmount = { type: 'tasks/INCREMENT_CARD_AMOUNT' }
+type IncrementCardId = { type: 'tasks/INCREMENT_CARD_AMOUNT' }
 
-type DecrementCardAmount = { type: 'tasks/DECREMENT_CARD_AMOUNT' }
-
-type IncrementListAmount = { type: 'tasks/INCREMENT_LIST_AMOUNT' }
-
-type DecrementListAmount = { type: 'tasks/DECREMENT_LIST_AMOUNT' }
+type IncrementListId = { type: 'tasks/INCREMENT_LIST_AMOUNT' }
 
 type AddCard = {
   type: 'tasks/ADD_CARD',
@@ -108,10 +104,18 @@ type AddList = {
   payload: Array<List>
 }
 
-type Actions = IncrementCardAmount |
-               DecrementCardAmount |
-               IncrementListAmount |
-               DecrementListAmount |
+type DeleteCard = {
+  type: 'tasks/DELETE_CARD',
+  payload: Array<List>
+}
+
+type DeleteList = {
+  type: 'tasks/DELETE_LIST',
+  payload: Array<List>
+}
+
+type Actions = IncrementCardId |
+               IncrementListId |
                AddCard |
                SetEditCard |
                SortCard |
@@ -119,7 +123,9 @@ type Actions = IncrementCardAmount |
                UpdateEditCard |
                SetStartTime |
                SetEndTime |
-               AddList;
+               AddList |
+               DeleteCard |
+               DeleteList;
 
 /**
  * The reducer
@@ -128,13 +134,9 @@ type Actions = IncrementCardAmount |
 export default (state: Tasks = initialState, action: Actions) => {
   switch (action.type) {
     case INCREMENT_CARD_AMOUNT:
-      return { ...state, cardAmount: state.cardAmount + 1 }
-    case DECREMENT_CARD_AMOUNT:
-      return Object.assign({}, state, { cardAmount: state.listAmount - 1 })
+      return { ...state, cardId: state.cardId + 1 }
     case INCREMENT_LIST_AMOUNT:
-      return { ...state, listAmount: state.cardAmount + 1 }
-    case DECREMENT_LIST_AMOUNT:
-      return Object.assign({}, state, { listAmount: state.listAmount - 1 })
+      return { ...state, listId: state.listId + 1 }
     case ADD_CARD:
       return Object.assign({}, state, { lists: action.payload })
     case SET_EDIT_CARD:
@@ -151,25 +153,21 @@ export default (state: Tasks = initialState, action: Actions) => {
       return Object.assign({}, state, { editItem: action.payload })
     case ADD_LIST:
       return Object.assign({}, state, { lists: action.payload })
+    case DELETE_CARD:
+      return Object.assign({}, state, { lists: action.payload })
+    case DELETE_LIST:
+      return Object.assign({}, state, { lists: action.payload })
     default:
       return state
   }
 }
 
-export const incrementCardAmount = (): IncrementCardAmount => {
+export const incrementCardId = (): IncrementCardId => {
   return { type: 'tasks/INCREMENT_CARD_AMOUNT' }
 }
 
-export const decrementCardAmount = (): DecrementCardAmount => {
-  return { type: 'tasks/DECREMENT_CARD_AMOUNT' }
-}
-
-export const incrementListAmount = (): IncrementListAmount => {
+export const incrementListId = (): IncrementListId => {
   return { type: 'tasks/INCREMENT_LIST_AMOUNT' }
-}
-
-export const decrementListAmount = (): DecrementListAmount => {
-  return { type: 'tasks/DECREMENT_LIST_AMOUNT' }
 }
 
 export const addCard = (list: Array<List>): AddCard => {
@@ -180,12 +178,12 @@ export const addCard = (list: Array<List>): AddCard => {
 }
 
 export const dispatchAddCard = (listId: number) => (dispatch: Dispatch, getState: () => State) => {
-  dispatch(incrementCardAmount())
+  dispatch(incrementCardId())
 
   const state = getState()
   const newList = _.cloneDeep(state.tasks.lists).map(list => {
     if (listId === list.id) {
-      list.items.push({id: state.tasks.cardAmount, content: '', startTime: '', endTime: ''})
+      list.items.push({id: state.tasks.cardId, content: '', startTime: '', endTime: ''})
     }
     return list
   })
@@ -218,13 +216,10 @@ export const setEditCard = (item: Item): SetEditCard => {
 }
 
 export const dispatchSetEditCard = (id: number) => (dispatch: Dispatch, getState: () => State) => {
-  console.log(id)
   const state = getState()
   let editItem = []
   _.cloneDeep(state.tasks.lists).forEach(list => (list.items.map(item => {
-    if (item.id === id) {
-      editItem.push(item)
-    }
+    if (item.id === id) { editItem.push(item) }
   })
   ))
 
@@ -244,7 +239,6 @@ export const updateEditCard = (lists: Array<List>): UpdateEditCard => {
 
 export const dispatchUpdateEditCard = (item: Item) => (dispatch: Dispatch, getState:() => State) => {
   const state = getState()
-  console.log(item)
   const lists = _.cloneDeep(state.tasks.lists).map(list => {
     return {
       id: list.id,
@@ -292,17 +286,17 @@ export const addList = (lists:Array<List>) :AddList => {
 }
 
 export const dispatchAddList = () => (dispatch: Dispatch, getState: () => State) => {
-  dispatch(incrementListAmount())
-  dispatch(incrementCardAmount())
+  dispatch(incrementListId())
+  dispatch(incrementCardId())
 
   const state = getState()
   let lists = _.cloneDeep(state.tasks.lists)
 
   lists.push({
-    id: state.tasks.listAmount,
+    id: state.tasks.listId,
     name: '',
     items: [{
-      id: state.tasks.cardAmount,
+      id: state.tasks.cardId,
       content: '',
       startTime: '',
       endTime: ''
@@ -310,4 +304,39 @@ export const dispatchAddList = () => (dispatch: Dispatch, getState: () => State)
   })
 
   dispatch(addList(lists))
+}
+
+export const deleteCard = (lists:Array<List>) :DeleteCard => {
+  return {
+    type: 'tasks/DELETE_CARD',
+    payload: lists
+  }
+}
+
+export const dispatchDeleteCard = (listId:number, cardId:number) => (dispatch:Dispatch, getState: () => State) => {
+  const state = getState()
+  const lists = _.cloneDeep(state.tasks.lists).map(list => {
+    return {
+      id: list.id,
+      name: list.name,
+      items: list.items.filter(item => { return item.id !== cardId })
+    }
+  })
+  dispatch(deleteCard(lists))
+}
+
+export const deleteList = (lists:Array<List>) :DeleteList => {
+  return {
+    type: 'tasks/DELETE_LIST',
+    payload: lists
+  }
+}
+
+export const dispatchDeleteList = (listId:number) => (dispatch:Dispatch, getState: () => State) => {
+  const state = getState()
+  const lists = _.cloneDeep(state.tasks.lists).filter(list => {
+    return list.id !== listId
+  })
+  console.log(lists)
+  dispatch(deleteList(lists))
 }
