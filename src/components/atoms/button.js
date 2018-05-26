@@ -48,7 +48,7 @@ const BtnPrimary = styled.button`
 
 const BtnAdd = styled.button`
   display: block;
-  width: 100%;
+  width: 360px;
   font-size: ${Font.SIZE.SMALL};
   font-weight: ${Font.WEIGHT.THIN};
   background-color: ${Color.THICK_GREEN};

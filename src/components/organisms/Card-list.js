@@ -140,7 +140,7 @@ class CardList extends Component<Props> {
                               {item.content || '新しいカード' }
                               <SubContents>
                                 <Deadend>
-                                  { item.endTime && <img src='/times.svg' />}
+                                  { item.endTime && <img src='/times.svg' alt='時間' />}
                                   { item.endTime && <span>{item.endTime}まで</span>}
                                 </Deadend>
                                 <EditButton onClick={(e, id) => { this.onClickEdit(e, item.id) }}>編集する</EditButton>
@@ -178,24 +178,28 @@ export default connect(mapStateToProps, {
 
 const ContentCard = styled.div`
   width: 376px;
-  min-height: 0;
+  max-height: 100%;
   box-sizing: content-box;
+  border-radius: 8px;
   overflow: scroll;
 `
 
 const Wrapper = styled.div`
   height: 100%;
+  display: flex;
+  align-items:flex-start;
+  align-content:flex-start;
 `
 
 const ListWrapper = styled.div`
   display: flex;
   flex-direction: column;
   width: 376px;
-  float: left;
-  height: 100%;
+  max-height: 100%;
   box-shadow: 1px 3px 5px ${Color.GRAY_ALPHA20};
-  border-radius: 4px;
+  border-radius: 8px;
   background: ${Color.GRAY};
+  margin: 0 8px;
 `
 
 const SubContents = styled.div`

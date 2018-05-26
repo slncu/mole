@@ -4,15 +4,16 @@ import type { State } from '../'
 import _ from 'lodash'
 import moment from 'moment'
 
-type Item = {
+export type Item = {
   id: number,
   content: string,
   startTime: string,
   endTime: string
 }
 
-type List = {
+export type List = {
   id: number,
+  name: string,
   items: Array<Item>
 }
 
@@ -20,12 +21,14 @@ export type Tasks = {
   lists: Array<List>,
   editItem: Item,
   isEditable: boolean,
-  cardAmount: number
+  cardAmount: number,
+  listAmount: number
 }
 
 const initialState = {
   lists: [{
     id: 1,
+    name: '',
     items: [{
       id: 1,
       content: '',
@@ -40,11 +43,14 @@ const initialState = {
     endTime: ''
   },
   isEditable: false,
-  cardAmount: 1
+  cardAmount: 1,
+  listAmount: 1
 }
 
 const INCREMENT_CARD_AMOUNT = 'tasks/INCREMENT_CARD_AMOUNT'
 const DECREMENT_CARD_AMOUNT = 'tasks/DECREMENT_CARD_AMOUNT'
+const INCREMENT_LIST_AMOUNT = 'tasks/INCREMENT_LIST_AMOUNT'
+const DECREMENT_LIST_AMOUNT = 'tasks/DECREMENT_LIST_AMOUNT'
 const ADD_CARD = 'tasks/ADD_CARD'
 const SORT_CARD = 'tasks/SORT_CARD'
 const IS_EDITABLE = 'tasks/IS_EDITABLE'
@@ -52,10 +58,15 @@ const SET_EDIT_CARD = 'tasks/SET_EDIT_CARD'
 const UPDATE_EDIT_CARD = 'tasks/UPDATE_EDIT_CARD'
 const SET_START_TIME = 'tasks/SET_START_TIME'
 const SET_END_TIME = 'tasks/SET_END_TIME'
+const ADD_LIST = 'tasks/ADD_LIST'
 
 type IncrementCardAmount = { type: 'tasks/INCREMENT_CARD_AMOUNT' }
 
 type DecrementCardAmount = { type: 'tasks/DECREMENT_CARD_AMOUNT' }
+
+type IncrementListAmount = { type: 'tasks/INCREMENT_LIST_AMOUNT' }
+
+type DecrementListAmount = { type: 'tasks/DECREMENT_LIST_AMOUNT' }
 
 type AddCard = {
   type: 'tasks/ADD_CARD',
@@ -92,15 +103,23 @@ type SetEndTime = {
   payload: Item
 }
 
+type AddList = {
+  type: 'tasks/ADD_LIST',
+  payload: Array<List>
+}
+
 type Actions = IncrementCardAmount |
                DecrementCardAmount |
+               IncrementListAmount |
+               DecrementListAmount |
                AddCard |
                SetEditCard |
                SortCard |
                IsEditable |
                UpdateEditCard |
                SetStartTime |
-               SetEndTime;
+               SetEndTime |
+               AddList;
 
 /**
  * The reducer
@@ -111,7 +130,11 @@ export default (state: Tasks = initialState, action: Actions) => {
     case INCREMENT_CARD_AMOUNT:
       return { ...state, cardAmount: state.cardAmount + 1 }
     case DECREMENT_CARD_AMOUNT:
-      return Object.assign({}, state, { cardAmount: state.cardAmount - 1 })
+      return Object.assign({}, state, { cardAmount: state.listAmount - 1 })
+    case INCREMENT_LIST_AMOUNT:
+      return { ...state, listAmount: state.cardAmount + 1 }
+    case DECREMENT_LIST_AMOUNT:
+      return Object.assign({}, state, { listAmount: state.listAmount - 1 })
     case ADD_CARD:
       return Object.assign({}, state, { lists: action.payload })
     case SET_EDIT_CARD:
@@ -126,6 +149,8 @@ export default (state: Tasks = initialState, action: Actions) => {
       return Object.assign({}, state, { editItem: action.payload })
     case SET_END_TIME:
       return Object.assign({}, state, { editItem: action.payload })
+    case ADD_LIST:
+      return Object.assign({}, state, { lists: action.payload })
     default:
       return state
   }
@@ -137,6 +162,14 @@ export const incrementCardAmount = (): IncrementCardAmount => {
 
 export const decrementCardAmount = (): DecrementCardAmount => {
   return { type: 'tasks/DECREMENT_CARD_AMOUNT' }
+}
+
+export const incrementListAmount = (): IncrementListAmount => {
+  return { type: 'tasks/INCREMENT_LIST_AMOUNT' }
+}
+
+export const decrementListAmount = (): DecrementListAmount => {
+  return { type: 'tasks/DECREMENT_LIST_AMOUNT' }
 }
 
 export const addCard = (list: Array<List>): AddCard => {
@@ -240,7 +273,6 @@ export const setEndTime = (obj: Item): SetEndTime => {
 }
 
 export const dispatchSetDeadEnd = (time: string, type: string) => (dispatch: Dispatch, getState: () => State) => {
-  console.log(time, type)
   const state = getState()
   const obj = _.cloneDeep(state.tasks.editItem)
   if (type === 'start') {
@@ -250,4 +282,32 @@ export const dispatchSetDeadEnd = (time: string, type: string) => (dispatch: Dis
     obj.endTime = moment(time).format('YYYY/MM/DD')
     dispatch(setEndTime(obj))
   }
+}
+
+export const addList = (lists:Array<List>) :AddList => {
+  return {
+    type: 'tasks/ADD_LIST',
+    payload: lists
+  }
+}
+
+export const dispatchAddList = () => (dispatch: Dispatch, getState: () => State) => {
+  dispatch(incrementListAmount())
+  dispatch(incrementCardAmount())
+
+  const state = getState()
+  let lists = _.cloneDeep(state.tasks.lists)
+
+  lists.push({
+    id: state.tasks.listAmount,
+    name: '',
+    items: [{
+      id: state.tasks.cardAmount,
+      content: '',
+      startTime: '',
+      endTime: ''
+    }]
+  })
+
+  dispatch(addList(lists))
 }
