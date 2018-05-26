@@ -140,7 +140,7 @@ class CardList extends Component<Props> {
                               {item.content || '新しいカード' }
                               <SubContents>
                                 <Deadend>
-                                  { item.endTime && <img src='/times.svg' />}
+                                  { item.endTime && <img src='/times.svg' alt='時間' />}
                                   { item.endTime && <span>{item.endTime}まで</span>}
                                 </Deadend>
                                 <EditButton onClick={(e, id) => { this.onClickEdit(e, item.id) }}>編集する</EditButton>
@@ -185,6 +185,7 @@ const ContentCard = styled.div`
 
 const Wrapper = styled.div`
   height: 100%;
+  display: flex;
 `
 
 const ListWrapper = styled.div`
@@ -192,7 +193,7 @@ const ListWrapper = styled.div`
   flex-direction: column;
   width: 376px;
   float: left;
-  height: 100%;
+  max-height: 100%;
   box-shadow: 1px 3px 5px ${Color.GRAY_ALPHA20};
   border-radius: 4px;
   background: ${Color.GRAY};

@@ -1,12 +1,12 @@
 // @flow
 import React from 'react'
 import styled from 'styled-components'
-import logo from '../../mole.png'
+// import logo from '../../mole.png'
 
 export default () => {
   return (
     <Wrapper>
-      <img src={logo} />
+      へっだー
     </Wrapper>
   )
 }

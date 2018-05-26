@@ -33,6 +33,5 @@ export default connect(null, {
 const Wrapper = styled.div`
   width: 360px;
   padding: 16px 8px;
-  background: linear-gradient(${Color.WHITE_ALPHA10}, ${Color.GRAY});
-  text-align: right;
+  background: linear-gradient(${Color.WHITE_ALPHA50}, ${Color.GRAY});
 `
