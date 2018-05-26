@@ -16,5 +16,4 @@ render(
   document.getElementById('root')
 )
 
-console.log(window.localStorage)
 registerServiceWorker()

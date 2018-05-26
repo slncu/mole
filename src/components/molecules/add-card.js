@@ -31,7 +31,9 @@ export default connect(null, {
 })(AddCard)
 
 const Wrapper = styled.div`
+  position: relative;
   width: 360px;
   padding: 16px 8px;
   background: linear-gradient(${Color.WHITE_ALPHA50}, ${Color.GRAY});
+  border-radius: 0 0 8px 8px;
 `
