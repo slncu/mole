@@ -96,7 +96,7 @@ class CardList extends Component<Props> {
     const destMap = getArrayMap(destination.droppableId)
     const [removed] = cloneAry[srcMap].items.splice(source.index, 1)
     cloneAry[destMap].items.splice(destination.index, 0, removed)
-    console.log(cloneAry)
+
     this.props.dispatchSortCard(cloneAry)
   }
 

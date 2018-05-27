@@ -13,5 +13,6 @@ export default () => (
 
 const Wrapper = styled.div`
   display: flex;
+  height: 100%;
   white-space: nowrap;
 `

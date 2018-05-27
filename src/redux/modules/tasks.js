@@ -337,6 +337,5 @@ export const dispatchDeleteList = (listId:number) => (dispatch:Dispatch, getStat
   const lists = _.cloneDeep(state.tasks.lists).filter(list => {
     return list.id !== listId
   })
-  console.log(lists)
   dispatch(deleteList(lists))
 }
