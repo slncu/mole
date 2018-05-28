@@ -12,7 +12,7 @@ import { dispatchEditCard,
   dispatchSetDeadEnd } from '../../redux/modules/tasks'
 import { dispatchIsOpenCalendar } from '../../redux/modules/ui'
 import Const from '../../const'
-const { Font } = Const
+const { Font, Color } = Const
 
 type Item = {
   id: number,
@@ -42,7 +42,9 @@ const customStyles = {
     right: 'auto',
     bottom: 'auto',
     marginRight: '-50%',
-    transform: 'translate(-50%, -50%)'
+    transform: 'translate(-50%, -50%)',
+    background: `${Color.THICK_WHITE}`,
+    overflow: 'visible'
   }
 }
 
@@ -82,11 +84,15 @@ class EditModal extends Component<Props, State> {
   getEditItem () {
     const { id, content, startTime, endTime } = this.props.editItem
     const obj = { id, content, startTime: this.props.editItem.startTime, endTime: this.props.editItem.endTime }
-    console.log(obj)
 
     return (
       <WrapperModal>
-        { this.props.isOpenCalendar && <Calendar typeOfDate={this.state.typeOfDate} dispatchIsOpenCalendar={this.props.dispatchIsOpenCalendar} dispatchSetDeadEnd={this.props.dispatchSetDeadEnd} />}
+        { this.props.isOpenCalendar && 
+          <Calendar 
+            typeOfDate={this.state.typeOfDate} 
+            dispatchIsOpenCalendar={this.props.dispatchIsOpenCalendar} 
+            dispatchSetDeadEnd={this.props.dispatchSetDeadEnd} 
+            editItem={this.props.editItem} />}
         <input type='hidden' name='id' defaultValue={id} />
         <Textarea 
           onChange={ e => obj.content = e.target.value } 
@@ -97,14 +103,13 @@ class EditModal extends Component<Props, State> {
         <Terms>
           <Input 
             onClick={(e) => { this.onSetDate(e, 'start') }}
-            label='開始'
+            label='期限'
             value={startTime}
             width='130'
             isReadOnly />
-          ~
+          <span>~</span>
           <Input 
             onClick={(e) => { this.onSetDate(e, 'end') }} 
-            label='終了'
             value={endTime}
             width='130'
             isReadOnly />
@@ -142,7 +147,7 @@ export default connect(null, {
 
 const WrapperModal = styled.div`
   width: 500px;
-  height: 500px;
+  height: 320px;
 `
 
 const WrapperButtons = styled.div`
@@ -158,4 +163,10 @@ const Terms = styled.div`
   display: flex;
   align-items: flex-end;
   margin: 20px 0;
+
+  > span {
+    display: block;
+    padding: 0 8px;
+    min-height: 32px;
+  }
 `

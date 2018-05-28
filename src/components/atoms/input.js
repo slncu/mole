@@ -33,6 +33,7 @@ const Wrapper = styled.div`
 
 const Label = styled.div`
   display: block;
+  font-weight: ${Font.WEIGHT.NORMAL};
 `
 
 const Content = styled.input`

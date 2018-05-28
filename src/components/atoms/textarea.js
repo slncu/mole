@@ -13,7 +13,6 @@ type Props = {
 }
 
 export const Textarea = (props:Props) => {
-  console.log(props)
   return (
     <Wrapper>
       <Label>{props.label}</Label>
@@ -34,6 +33,7 @@ const Wrapper = styled.div`
 
 const Label = styled.div`
   display: block;
+  font-weight: ${Font.WEIGHT.NORMAL};
 `
 
 const Content = styled.textarea`
