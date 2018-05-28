@@ -193,8 +193,9 @@ const Wrapper = styled.div`
 `
 
 const ListLabel = styled.div`
+  min-height: 28px;
   display: flex;
-  padding: 8px;
+  padding: 8px 8px 0 8px;
   align-items: center;
   justify-content: space-between;
 
