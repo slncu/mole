@@ -1,14 +1,18 @@
 // @flow
-
 import React, { Component } from 'react'
 import styled from 'styled-components'
 import { connect } from 'react-redux'
 import Modal from 'react-modal'
+import { UpdateButton, CancelButton } from '../atoms/button'
+import { Textarea } from '../atoms/textarea'
+import { Input } from '../atoms/input'
 import Calendar from './calendar'
 import { dispatchEditCard,
   dispatchUpdateEditCard,
   dispatchSetDeadEnd } from '../../redux/modules/tasks'
 import { dispatchIsOpenCalendar } from '../../redux/modules/ui'
+import Const from '../../const'
+const { Font } = Const
 
 type Item = {
   id: number,
@@ -78,16 +82,37 @@ class EditModal extends Component<Props, State> {
   getEditItem () {
     const { id, content, startTime, endTime } = this.props.editItem
     const obj = { id, content, startTime: this.props.editItem.startTime, endTime: this.props.editItem.endTime }
+    console.log(obj)
 
     return (
       <WrapperModal>
         { this.props.isOpenCalendar && <Calendar typeOfDate={this.state.typeOfDate} dispatchIsOpenCalendar={this.props.dispatchIsOpenCalendar} dispatchSetDeadEnd={this.props.dispatchSetDeadEnd} />}
         <input type='hidden' name='id' defaultValue={id} />
-        <input onChange={e => (obj.content = e.target.value)} type='text' name='content' defaultValue={content} />
-        <p onClick={(e) => { this.onSetDate(e, 'start') }}>{startTime || 'start'}</p>
-        <p onClick={(e) => { this.onSetDate(e, 'end') }}>{endTime || 'end'}</p>
-        <button onClick={this.onClose}>閉じる</button>
-        <button onClick={() => { this.onUpdateItem(obj) }}>更新</button>
+        <Textarea 
+          onChange={ e => obj.content = e.target.value } 
+          label='詳細'
+          name='content' 
+          defaultValue={content}
+          placeholder='ここにタスクの内容を追加します' />
+        <Terms>
+          <Input 
+            onClick={(e) => { this.onSetDate(e, 'start') }}
+            label='開始'
+            value={startTime}
+            width='130'
+            isReadOnly />
+          ~
+          <Input 
+            onClick={(e) => { this.onSetDate(e, 'end') }} 
+            label='終了'
+            value={endTime}
+            width='130'
+            isReadOnly />
+        </Terms>
+        <WrapperButtons>
+          <CancelButton onClick={this.onClose}>閉じる</CancelButton>
+          <UpdateButton onClick={() => { this.onUpdateItem(obj) }}>更新</UpdateButton>
+        </WrapperButtons>
       </WrapperModal>
     )
   }
@@ -118,4 +143,19 @@ export default connect(null, {
 const WrapperModal = styled.div`
   width: 500px;
   height: 500px;
+`
+
+const WrapperButtons = styled.div`
+  display: flex;
+  justify-content: flex-end;
+
+  > div + div {
+    margin-left: 16px;
+  }
+`
+
+const Terms = styled.div`
+  display: flex;
+  align-items: flex-end;
+  margin: 20px 0;
 `
