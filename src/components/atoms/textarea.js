@@ -16,7 +16,7 @@ export const Textarea = (props:Props) => {
   return (
     <Wrapper>
       <Label>{props.label}</Label>
-      <Content 
+      <Content
         onChange={props.onChange}
         name={props.name}
         defaultValue={props.defaultValue}

@@ -36,9 +36,9 @@ export default function Calendar (props: Props) {
           width={300}
           height={200}
           selected={
-            props.typeOfDate === 'start' ?
-            props.editItem.startTime || today :
-            props.editItem.endTime || today
+            props.typeOfDate === 'start'
+              ? props.editItem.startTime || today
+              : props.editItem.endTime || today
           }
           minDate={lastWeek}
           onSelect={(date) => { onSelectDate(date) }}
@@ -47,13 +47,13 @@ export default function Calendar (props: Props) {
             floatingNav: {
               background: 'rgba(56, 87, 138, 0.94)',
               chevron: '#FFA726',
-              color: '#FFF',
+              color: '#FFF'
             },
             headerColor: `${Color.THICK_GREEN}`,
             selectionColor: `${Color.LIGHT_GREEN}`,
             textColor: {
               active: '#FFF',
-              default: '#333',
+              default: '#333'
             },
             todayColor: `${Color.LIGHT_GREEN}`,
             weekdayColor: `${Color.LIGHT_GREEN}`

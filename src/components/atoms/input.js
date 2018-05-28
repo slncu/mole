@@ -3,7 +3,7 @@ import React from 'react'
 import styled from 'styled-components'
 import moment from 'moment'
 import Const from '../../const'
-const { Color, Font } = Const
+const { Font } = Const
 const today = moment().format('YYYY/MM/DD')
 
 type Props = {
@@ -17,10 +17,10 @@ type Props = {
 export const Input = (props: Props) => (
   <Wrapper>
     <Label>{props.label}</Label>
-    <Content 
+    <Content
       onClick={props.onClick}
       value={props.value || today}
-      readOnly={props.isReadOnly ? true : false }
+      readOnly={!!props.isReadOnly}
     />
   </Wrapper>
 )
@@ -28,7 +28,7 @@ export const Input = (props: Props) => (
 const Wrapper = styled.div`
   display: flex;
   flex-direction: column;
-  width: ${(props) => props.width ? props.width : '130' }px
+  width: ${(props) => props.width ? props.width : '130'}px
 `
 
 const Label = styled.div`

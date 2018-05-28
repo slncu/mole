@@ -12,7 +12,7 @@ import { dispatchEditCard,
   dispatchSetDeadEnd } from '../../redux/modules/tasks'
 import { dispatchIsOpenCalendar } from '../../redux/modules/ui'
 import Const from '../../const'
-const { Font, Color } = Const
+const { Color } = Const
 
 type Item = {
   id: number,
@@ -87,29 +87,29 @@ class EditModal extends Component<Props, State> {
 
     return (
       <WrapperModal>
-        { this.props.isOpenCalendar && 
-          <Calendar 
-            typeOfDate={this.state.typeOfDate} 
-            dispatchIsOpenCalendar={this.props.dispatchIsOpenCalendar} 
-            dispatchSetDeadEnd={this.props.dispatchSetDeadEnd} 
+        { this.props.isOpenCalendar &&
+          <Calendar
+            typeOfDate={this.state.typeOfDate}
+            dispatchIsOpenCalendar={this.props.dispatchIsOpenCalendar}
+            dispatchSetDeadEnd={this.props.dispatchSetDeadEnd}
             editItem={this.props.editItem} />}
         <input type='hidden' name='id' defaultValue={id} />
-        <Textarea 
-          onChange={ e => obj.content = e.target.value } 
+        <Textarea
+          onChange={e => { obj.content = e.target.value }}
           label='詳細'
-          name='content' 
+          name='content'
           defaultValue={content}
           placeholder='ここにタスクの内容を追加します' />
         <Terms>
-          <Input 
+          <Input
             onClick={(e) => { this.onSetDate(e, 'start') }}
             label='期限'
             value={startTime}
             width='130'
             isReadOnly />
           <span>~</span>
-          <Input 
-            onClick={(e) => { this.onSetDate(e, 'end') }} 
+          <Input
+            onClick={(e) => { this.onSetDate(e, 'end') }}
             value={endTime}
             width='130'
             isReadOnly />
