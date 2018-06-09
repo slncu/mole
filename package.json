@@ -10,6 +10,7 @@
     "react-beautiful-dnd": "^7.1.0",
     "react-click-outside": "tj/react-click-outside",
     "react-dom": "^16.3.2",
+    "react-event-listener": "^0.6.0",
     "react-infinite-calendar": "^2.3.1",
     "react-modal": "^3.4.2",
     "react-redux": "^5.0.7",
@@ -29,6 +30,7 @@
     "stylelint": "stylelint './src/**/*.js'",
     "fix:js": "standard --fix",
     "fix:css": "stylelint './src/**/*.js' --fix",
+    "flow": "flow check .",
     "eject": "react-scripts eject"
   },
   "devDependencies": {

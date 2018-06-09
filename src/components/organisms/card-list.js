@@ -8,10 +8,10 @@ import EditModal from '../molecules/edit-modal'
 import { EditButton } from '../atoms/button'
 import Const from '../../const'
 import { dispatchSortCard,
-  dispatchEditCard,
-  dispatchSetEditCard,
-  dispatchDeleteCard,
-  dispatchDeleteList } from '../../redux/modules/tasks'
+         dispatchEditCard,
+         dispatchSetEditCard,
+         dispatchDeleteCard,
+         dispatchDeleteList } from '../../redux/modules/tasks'
 import type { Tasks } from '../../redux/modules/tasks'
 import type { Ui } from '../../redux/modules/ui'
 

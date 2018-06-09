@@ -3,14 +3,14 @@
 import React from 'react'
 import styled from 'styled-components'
 import TaskBoard from '../organisms/task-board'
-import Header from '../organisms/header'
+import Timeline from '../organisms/timeline'
 
 export default () => (
   <Page>
-    <Header />
     <Contents>
       <TaskBoard />
     </Contents>
+    <Timeline />
   </Page>
 )
 
