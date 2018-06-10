@@ -2,9 +2,7 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import moment from 'moment'
-import _ from 'lodash'
 import styled from 'styled-components'
-import EventListener, { withOptions } from 'react-event-listener'
 import type { Tasks } from '../../redux/modules/tasks'
 import type { Ui } from '../../redux/modules/ui'
 import { momentDiffFormatter } from '../../utils/dateManipulator'
@@ -24,60 +22,70 @@ class Timeline extends Component<Props>{
     this.today = moment()
   }
 
-  minDate() {
-    const { lists } = this.props.tasks
-    const min = lists.map(list => {
-      return list.items.map(item => {
-        return this.calculateTermOfTasks(item.startTime, item.endTime).startToNow
-      })
-    })
-    return _.min(min[0])
-  }
+  // minDate() {
+  //   const { lists } = this.props.tasks
+  //   const min = lists.map(list => {
+  //     return list.items.map(item => {
+  //       return this.calculateTermOfTasks(item.startTime, item.endTime).startToNow
+  //     })
+  //   })
+  //   return _.min(min[0])
+  // }
 
-  maxDate() {
-    const { lists } = this.props.tasks
-    const min = lists.map(list => {
-      return list.items.map(item => {
-        return this.calculateTermOfTasks(item.startTime, item.endTime).nowToEnd
-      })
+  // maxDate() {
+  //   const { lists } = this.props.tasks
+  //   const min = lists.map(list => {
+  //     return list.items.map(item => {
+  //       return this.calculateTermOfTasks(item.startTime, item.endTime).nowToEnd
+  //     })
+  //   })
+  //   return _.max(min[0])
+  // }
+
+  timelineBlock(item) {
+    const items = [];
+
+    [this.calculateTermOfTasks(item.startTime, item.endTime).nowToEnd].forEach(e => {
+      for (let i = 0; i <= e; i++) {
+        items.push(<TimelineBlock key={`${item.id}${i}`}/>)
+      }
     })
-    return _.max(min[0])
+    return items
   }
 
   calculateTermOfTasks(startTime: string, endTime: string) {
     const startToNow = moment(momentDiffFormatter(this.today)).diff(moment(momentDiffFormatter(moment(startTime))), 'days')
     const nowToEnd = moment(momentDiffFormatter(moment(endTime))).diff(moment(momentDiffFormatter(this.today)), 'days')
-    console.log(startToNow, nowToEnd)
+
     return { startToNow, nowToEnd }
   }
 
   render() {
     const { lists } = this.props.tasks
-    console.log(this.minDate())
+
     return (
       <Wrapper>
         <Overlay />
         <TimelineWrapper>
           <ListTime>
             {this.today.format('YYYY/MM/DD')}
-            min{this.minDate()}
-            max{this.maxDate()}
+            {/* {this.timelineBlock()} */}
           </ListTime>
           <ListLabel>
-            {lists.map(list => (
+            {lists.map(list =>{ 
+              return(
               <List key={list.id}>
                 <Label>{list.name}</Label>
                 <CardList>
                   {list.items.map(item => (
                     <li key={item.id}>
                       {item.content}
-                      {item.startTime}
-                      {item.endTime}
+                      {this.timelineBlock(item)}
                     </li>
                   ))}
                 </CardList>
               </List>
-            ))}
+            )})}
           </ListLabel>
         </TimelineWrapper>
       </Wrapper>
@@ -117,6 +125,7 @@ const TimelineWrapper = styled.div`
   width: 100%;
   background: ${Color.THICK_WHITE};
   z-index: 1;
+  overflow-y: scroll;
 `
 
 const ListLabel = styled.div`
@@ -125,7 +134,7 @@ const ListLabel = styled.div`
 `
 
 const List = styled.div`
-  display: flex;
+  display: block;
 `
 
 const Label = styled.div`
@@ -138,6 +147,7 @@ const CardList = styled.ul`
   margin: 0;
   padding: 0;
   list-style-type: none;
+  white-space: no-wrap;
 
   > li + li {
     padding-top: 8px;
@@ -149,4 +159,13 @@ const ListTime = styled.div`
   flex-direction: column;
   margin-left: 100px;
   padding-left:
+`
+
+const TimelineBlock = styled.div`
+  display: inline-block;
+  background-color: ${Color.THICK_GREEN};
+  border-radius: 8px;
+  border: 1px solid ${Color.GRAY};
+  width: 80px;
+  height: 20px;
 `
