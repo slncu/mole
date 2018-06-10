@@ -14,10 +14,10 @@ type Props = {
   ui: Ui
 }
 
-class Timeline extends Component<Props>{
+class Timeline extends Component<Props> {
   today: any // ちゃんとした型に変える
 
-  constructor() {
+  constructor () {
     super()
     this.today = moment()
   }
@@ -42,25 +42,25 @@ class Timeline extends Component<Props>{
   //   return _.max(min[0])
   // }
 
-  timelineBlock(item) {
+  timelineBlock (item) {
     const items = [];
 
     [this.calculateTermOfTasks(item.startTime, item.endTime).nowToEnd].forEach(e => {
       for (let i = 0; i <= e; i++) {
-        items.push(<TimelineBlock key={`${item.id}${i}`}/>)
+        items.push(<TimelineBlock key={`${item.id}${i}`} />)
       }
     })
     return items
   }
 
-  calculateTermOfTasks(startTime: string, endTime: string) {
+  calculateTermOfTasks (startTime: string, endTime: string) {
     const startToNow = moment(momentDiffFormatter(this.today)).diff(moment(momentDiffFormatter(moment(startTime))), 'days')
     const nowToEnd = moment(momentDiffFormatter(moment(endTime))).diff(moment(momentDiffFormatter(this.today)), 'days')
 
     return { startToNow, nowToEnd }
   }
 
-  render() {
+  render () {
     const { lists } = this.props.tasks
 
     return (
@@ -72,20 +72,21 @@ class Timeline extends Component<Props>{
             {/* {this.timelineBlock()} */}
           </ListTime>
           <ListLabel>
-            {lists.map(list =>{ 
-              return(
-              <List key={list.id}>
-                <Label>{list.name}</Label>
-                <CardList>
-                  {list.items.map(item => (
-                    <li key={item.id}>
-                      {item.content}
-                      {this.timelineBlock(item)}
-                    </li>
-                  ))}
-                </CardList>
-              </List>
-            )})}
+            {lists.map(list => {
+              return (
+                <List key={list.id}>
+                  <Label>{list.name}</Label>
+                  <CardList>
+                    {list.items.map(item => (
+                      <li key={item.id}>
+                        {item.content}
+                        {this.timelineBlock(item)}
+                      </li>
+                    ))}
+                  </CardList>
+                </List>
+              )
+            })}
           </ListLabel>
         </TimelineWrapper>
       </Wrapper>
@@ -93,7 +94,7 @@ class Timeline extends Component<Props>{
   }
 }
 
-function mapStateToProps(state) {
+function mapStateToProps (state) {
   return {
     tasks: state.tasks,
     ui: state.ui

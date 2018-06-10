@@ -7,8 +7,8 @@ import moment from 'moment'
  * @param {Object} proxymo moemntオブジェクトがinvalidだった場合の代理momentオブジェクト
  */
 export const momentDiffFormatter = (momentObj: any, proxymo: any) => {
-  if(proxymo === undefined) proxymo = moment()
-  return momentObj.isValid() ?
-    momentObj.format('YYYY,MM,DD').split(',').map(date => ( parseInt(date, 10))) :
-    proxymo.format('YYYY,MM,DD').split(',').map(date => ( parseInt(date, 10)))
+  if (proxymo === undefined) proxymo = moment()
+  return momentObj.isValid()
+    ? momentObj.format('YYYY,MM,DD').split(',').map(date => (parseInt(date, 10)))
+    : proxymo.format('YYYY,MM,DD').split(',').map(date => (parseInt(date, 10)))
 }
