@@ -28,7 +28,6 @@ export default function Calendar (props: Props) {
     props.dispatchIsOpenCalendar(false)
   }
 
-  console.log(props)
   return (
     <Wrapper>
       <ClickOutside onClickOutside={() => { onClose() }}>

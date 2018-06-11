@@ -2,8 +2,9 @@
 
 import React from 'react'
 import styled from 'styled-components'
-import TaskBoard from '../organisms/task-board'
 import Header from '../organisms/header'
+import TaskBoard from '../organisms/task-board'
+import Timeline from '../organisms/timeline'
 
 export default () => (
   <Page>
@@ -11,6 +12,7 @@ export default () => (
     <Contents>
       <TaskBoard />
     </Contents>
+    <Timeline />
   </Page>
 )
 
@@ -23,5 +25,6 @@ const Contents = styled.div`
   position: relative;
   width: 100%;
   height: 85%;
-  padding: 0 36px;
+  padding: 24px 36px;
+  box-sizing: border-box;
 `
