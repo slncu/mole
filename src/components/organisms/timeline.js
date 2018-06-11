@@ -2,16 +2,20 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import moment from 'moment'
+import ClickOutside from 'react-click-outside'
+import _ from 'lodash'
 import styled from 'styled-components'
 import type { Tasks } from '../../redux/modules/tasks'
 import type { Ui } from '../../redux/modules/ui'
+import { disPatchIsOpenTimeline } from '../../redux/modules/ui'
 import { momentDiffFormatter } from '../../utils/dateManipulator'
 import Const from '../../const'
 const { Color } = Const
 
 type Props = {
   tasks: Tasks,
-  ui: Ui
+  ui: Ui,
+  disPatchIsOpenTimeline: (isOpen:boolean) => void
 }
 
 class Timeline extends Component<Props> {
@@ -22,34 +26,42 @@ class Timeline extends Component<Props> {
     this.today = moment()
   }
 
-  // minDate() {
-  //   const { lists } = this.props.tasks
-  //   const min = lists.map(list => {
-  //     return list.items.map(item => {
-  //       return this.calculateTermOfTasks(item.startTime, item.endTime).startToNow
-  //     })
-  //   })
-  //   return _.min(min[0])
-  // }
+  maxDate () {
+    const { lists } = this.props.tasks
+    const max = _.cloneDeep(lists).map(list => {
+      return list.items.map(item => {
+        return this.calculateTermOfTasks(item.startTime, item.endTime).nowToEnd
+      })
+    })
+    console.log(_.max(max[0]))
+    return _.max(max[0])
+  }
 
-  // maxDate() {
-  //   const { lists } = this.props.tasks
-  //   const min = lists.map(list => {
-  //     return list.items.map(item => {
-  //       return this.calculateTermOfTasks(item.startTime, item.endTime).nowToEnd
-  //     })
-  //   })
-  //   return _.max(min[0])
-  // }
+  daysBlock () {
+    const days = []
+    const max = this.maxDate()
+    console.log(max)
+
+    for (let i = 1; i <= max; i++) {
+      days.push(
+        <DaysBlock key={i}>{this.today.add(1, 'days').format('MM/DD')}</DaysBlock>
+      )
+    }
+    console.log(days)
+    return days
+  }
 
   timelineBlock (item) {
     const items = [];
 
     [this.calculateTermOfTasks(item.startTime, item.endTime).nowToEnd].forEach(e => {
       for (let i = 0; i <= e; i++) {
-        items.push(<TimelineBlock key={`${item.id}${i}`} />)
+        items.push(
+          <TimelineBlock key={`${item.id}${i}`} />
+        )
       }
     })
+    console.log(items)
     return items
   }
 
@@ -60,35 +72,46 @@ class Timeline extends Component<Props> {
     return { startToNow, nowToEnd }
   }
 
+  onClose() {
+    this.props.disPatchIsOpenTimeline(false)
+  }
+
   render () {
     const { lists } = this.props.tasks
 
     return (
       <Wrapper>
         <Overlay />
-        <TimelineWrapper>
-          <ListTime>
-            {this.today.format('YYYY/MM/DD')}
-            {/* {this.timelineBlock()} */}
-          </ListTime>
-          <ListLabel>
-            {lists.map(list => {
-              return (
-                <List key={list.id}>
-                  <Label>{list.name}</Label>
-                  <CardList>
-                    {list.items.map(item => (
-                      <li key={item.id}>
-                        {item.content}
-                        {this.timelineBlock(item)}
-                      </li>
-                    ))}
-                  </CardList>
-                </List>
-              )
-            })}
-          </ListLabel>
-        </TimelineWrapper>
+        <ClickOutside onClickOutside={() => { this.onClose() }}>
+          <Milestone>
+            <LeftContent>
+              <CardBox>
+                {lists.map(list => (
+                  list.items.map(item => (
+                    <CardName key={item.id}>
+                      {item.content}
+                    </CardName>
+                  ))
+                ))}
+              </CardBox>
+            </LeftContent>
+            <RightContent>
+              <TermsBox>
+                {lists.map(list => (
+                  list.items.map(item => (
+                    <TermsWrapper key={item.id}>
+                      {this.timelineBlock(item)}
+                    </TermsWrapper>
+                  ))
+                ))}
+                <DaysWrapper>
+                  <DaysBlock>{this.today.format('MM/DD')}</DaysBlock>
+                  {this.daysBlock()}
+                </DaysWrapper>
+              </TermsBox>
+            </RightContent>
+          </Milestone>
+        </ClickOutside >
       </Wrapper>
     )
   }
@@ -101,7 +124,9 @@ function mapStateToProps (state) {
   }
 }
 
-export default connect(mapStateToProps)(Timeline)
+export default connect(mapStateToProps,{
+  disPatchIsOpenTimeline
+})(Timeline)
 
 const Overlay = styled.div`
   position: fixed;
@@ -114,59 +139,87 @@ const Overlay = styled.div`
 
 const Wrapper = styled.div`
   position: absolute;
-  display: flex;
-  width: 100%;
+  width: 100vw;
   height: 33.3%;
   bottom: 0;
   left: 0;
 `
 
-const TimelineWrapper = styled.div`
-  display: block;
+const Milestone = styled.div`
+  position: relative;
+  overflow: scroll;
   width: 100%;
-  background: ${Color.THICK_WHITE};
+  height: 100%;
+`
+
+const LeftContent = styled.div`
+  position: sticky;
+  background-color: ${Color.THICK_WHITE};
+  padding: 29px 0 0 0;
+  border-right: 1px solid ${Color.GRAY};
+  float: left;
+  top: 0;
+  left: 0;
+  z-index: 2;
+`
+const CardName = styled.div`
+  width: 120px;
+  padding: 6px 12px 6px 0;
+  text-align: right;
+  background-color: ${Color.THICK_WHITE};
+  border-top: 1px solid ${Color.GRAY};
+`
+
+const RightContent = styled.div`
+  position: absolute;
+  background-color: ${Color.THICK_WHITE};
   z-index: 1;
-  overflow-y: scroll;
+  white-space: nowrap;
+  left: 133px;
+  padding-top: 29px;
+  height: 100%;
 `
 
-const ListLabel = styled.div`
+const TermsWrapper = styled.div`
+  padding: 6px 12px 6px 10px;
+  background-color: ${Color.THICK_WHITE};
+  white-space: nowrap;
+  height: 23px;
+  border-top: 1px solid ${Color.GRAY};
+`
+
+const DaysWrapper = styled.div`
   display: flex;
-  flex-direction: column;
+  position: absolute;
+  font-size: 10px;
+  padding: 6px 0 0 145px;
+  top: -29px;
+  left: -133px;
 `
 
-const List = styled.div`
-  display: block;
-`
-
-const Label = styled.div`
-  display: block;
-  width: 100px;
-
-`
-
-const CardList = styled.ul`
-  margin: 0;
-  padding: 0;
-  list-style-type: none;
-  white-space: no-wrap;
-
-  > li + li {
-    padding-top: 8px;
-  }
-`
-
-const ListTime = styled.div`
-  display: flex;
-  flex-direction: column;
-  margin-left: 100px;
-  padding-left:
+const DaysBlock = styled.div`
+  display: inline-block;
+  background-color: ${Color.THICK_WHITE};
+  width: 36px;
+  height: 22px;
+  box-sizing: border-box;
 `
 
 const TimelineBlock = styled.div`
   display: inline-block;
   background-color: ${Color.THICK_GREEN};
-  border-radius: 8px;
+  border-radius: 4px;
   border: 1px solid ${Color.GRAY};
-  width: 80px;
-  height: 20px;
+  width: 36px;
+  height: 22px;
+  box-sizing: border-box;
+`
+
+const CardBox = styled.div`
+  position: relative;
+  overflow: scroll;
+`
+
+const TermsBox = styled.div`
+  position: relative;
 `
