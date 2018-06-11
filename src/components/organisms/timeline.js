@@ -2,7 +2,6 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import moment from 'moment'
-import ClickOutside from 'react-click-outside'
 import _ from 'lodash'
 import styled from 'styled-components'
 import type { Tasks } from '../../redux/modules/tasks'
@@ -33,21 +32,20 @@ class Timeline extends Component<Props> {
         return this.calculateTermOfTasks(item.startTime, item.endTime).nowToEnd
       })
     })
-    console.log(_.max(max[0]))
+
     return _.max(max[0])
   }
 
   daysBlock () {
     const days = []
     const max = this.maxDate()
-    console.log(max)
 
     for (let i = 1; i <= max; i++) {
       days.push(
         <DaysBlock key={i}>{this.today.add(1, 'days').format('MM/DD')}</DaysBlock>
       )
     }
-    console.log(days)
+
     return days
   }
 
@@ -61,7 +59,7 @@ class Timeline extends Component<Props> {
         )
       }
     })
-    console.log(items)
+
     return items
   }
 
@@ -72,46 +70,48 @@ class Timeline extends Component<Props> {
     return { startToNow, nowToEnd }
   }
 
-  onClose() {
+  onClose () {
     this.props.disPatchIsOpenTimeline(false)
   }
 
   render () {
     const { lists } = this.props.tasks
+    const { isOpenTimeline } = this.props.ui
 
+    // TODO ちゃんとコンポーネント返す
+    if (!isOpenTimeline) return (<div />)
     return (
       <Wrapper>
         <Overlay />
-        <ClickOutside onClickOutside={() => { this.onClose() }}>
-          <Milestone>
-            <LeftContent>
-              <CardBox>
-                {lists.map(list => (
-                  list.items.map(item => (
-                    <CardName key={item.id}>
-                      {item.content}
-                    </CardName>
-                  ))
-                ))}
-              </CardBox>
-            </LeftContent>
-            <RightContent>
-              <TermsBox>
-                {lists.map(list => (
-                  list.items.map(item => (
-                    <TermsWrapper key={item.id}>
-                      {this.timelineBlock(item)}
-                    </TermsWrapper>
-                  ))
-                ))}
-                <DaysWrapper>
-                  <DaysBlock>{this.today.format('MM/DD')}</DaysBlock>
-                  {this.daysBlock()}
-                </DaysWrapper>
-              </TermsBox>
-            </RightContent>
-          </Milestone>
-        </ClickOutside >
+        <CloseBtn src='/ng.svg' alt='NG' onClick={() => { this.onClose() }} width='20px' />
+        <Milestone>
+          <LeftContent>
+            <CardBox>
+              {lists.map(list => (
+                list.items.map(item => (
+                  <CardName key={item.id}>
+                    {item.content}
+                  </CardName>
+                ))
+              ))}
+            </CardBox>
+          </LeftContent>
+          <RightContent>
+            <TermsBox>
+              {lists.map(list => (
+                list.items.map(item => (
+                  <TermsWrapper key={item.id}>
+                    {this.timelineBlock(item)}
+                  </TermsWrapper>
+                ))
+              ))}
+              <DaysWrapper>
+                <DaysBlock>{this.today.format('MM/DD')}</DaysBlock>
+                {this.daysBlock()}
+              </DaysWrapper>
+            </TermsBox>
+          </RightContent>
+        </Milestone>
       </Wrapper>
     )
   }
@@ -124,7 +124,7 @@ function mapStateToProps (state) {
   }
 }
 
-export default connect(mapStateToProps,{
+export default connect(mapStateToProps, {
   disPatchIsOpenTimeline
 })(Timeline)
 
@@ -135,6 +135,13 @@ const Overlay = styled.div`
   top: 0;
   left: 0;
   background: ${Color.BLACK_ALPHA60};
+`
+
+const CloseBtn = styled.img`
+  position: fixed;
+  top: 12px;
+  right: 12px;
+  cursor: pointer;
 `
 
 const Wrapper = styled.div`
@@ -160,10 +167,13 @@ const LeftContent = styled.div`
   float: left;
   top: 0;
   left: 0;
+  min-height: 100%;
   z-index: 2;
 `
 const CardName = styled.div`
   width: 120px;
+  white-space: nowrap;
+  overflow: scroll;
   padding: 6px 12px 6px 0;
   text-align: right;
   background-color: ${Color.THICK_WHITE};
@@ -177,6 +187,7 @@ const RightContent = styled.div`
   white-space: nowrap;
   left: 133px;
   padding-top: 29px;
+  min-width: 100%;
   height: 100%;
 `
 

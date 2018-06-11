@@ -2,7 +2,8 @@
 import type { Dispatch } from 'redux'
 export type Ui = {
   isOpenModal: boolean,
-  isOpenCalendar: boolean
+  isOpenCalendar: boolean,
+  isOpenTimeline: boolean
 }
 
 const initialState = {
@@ -45,7 +46,7 @@ export default (state: Ui = initialState, action: Actions) => {
     case IS_OPEN_MODAL:
       return state
     case IS_OPEN_TIMELINE:
-      return state
+      return { ...state, isOpenTimeline: action.payload }
     default:
       return state
   }
